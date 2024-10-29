@@ -7,15 +7,6 @@ import {
 } from "aws-cdk-lib/pipelines";
 import { WidgetPipelineAppStage } from "./pipeline-app-stage";
 
-require("dotenv").config();
-
-const config = {
-  env: {
-    account: process.env.AWS_ACCOUNT_NUMBER,
-    region: process.env.AWS_REGION
-  }
-}
-
 export class WidgetCicdStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
@@ -48,7 +39,7 @@ export class WidgetCicdStack extends cdk.Stack {
 
     deployStage.addPre(
       new ShellStep("Test", {
-        commands: ["npm test"],
+        commands: ["npm ci", "npm test"],
       })
     );
   }
