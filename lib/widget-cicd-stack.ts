@@ -8,6 +8,7 @@ import {
 import { WidgetPipelineAppStage } from "./pipeline-app-stage";
 
 require("dotenv").config();
+
 const config = {
   env: {
     account: process.env.AWS_ACCOUNT_NUMBER,
@@ -40,12 +41,7 @@ export class WidgetCicdStack extends cdk.Stack {
     });
 
     const deployStage = pipeline.addStage(
-      new WidgetPipelineAppStage(this, "Deploy", {
-        env: {
-          account: process.env.AWS_ACCOUNT_NUMBER,
-          region: process.env.AWS_REGION,
-        },
-      })
+      new WidgetPipelineAppStage(this, "Deploy")
     );
 
     deployStage.addPre(
