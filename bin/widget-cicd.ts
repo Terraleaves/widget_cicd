@@ -4,4 +4,9 @@ import * as cdk from "aws-cdk-lib";
 import { WidgetCicdStack } from "../lib/widget-cicd-stack";
 
 const app = new cdk.App();
-new WidgetCicdStack(app, "WidgetCicdStack");
+new WidgetCicdStack(app, "WidgetCicdStack", {
+  env: {
+    account: "325861338157",
+    region: "ap-southeast-2",
+  },
+});
