@@ -18,10 +18,7 @@ const config = {
 
 export class WidgetCicdStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
-    super(scope, id, {
-      ...props,
-      env: config.env
-    });
+    super(scope, id, props);
 
     const pipeline = new CodePipeline(this, "Pipeline", {
       pipelineName: "WidgetPipeline",
@@ -41,7 +38,12 @@ export class WidgetCicdStack extends cdk.Stack {
     });
 
     const deployStage = pipeline.addStage(
-      new WidgetPipelineAppStage(this, "Deploy")
+      new WidgetPipelineAppStage(this, "Deploy", {
+        env: {
+          account: "325861338157",
+          region: "ap-southeast-2",
+        },
+      })
     );
 
     deployStage.addPre(
