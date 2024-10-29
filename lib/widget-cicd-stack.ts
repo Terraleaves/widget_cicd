@@ -8,15 +8,18 @@ import {
 import { WidgetPipelineAppStage } from "./pipeline-app-stage";
 
 require("dotenv").config();
+const config = {
+  env: {
+    account: process.env.AWS_ACCOUNT_NUMBER,
+    region: process.env.AWS_REGION
+  }
+}
 
 export class WidgetCicdStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, {
       ...props,
-      env: {
-        account: process.env.AWS_ACCOUNT_NUMBER,
-        region: process.env.AWS_REGION,
-      },
+      env: config.env
     });
 
     const pipeline = new CodePipeline(this, "Pipeline", {
