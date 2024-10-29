@@ -7,9 +7,17 @@ import {
 } from "aws-cdk-lib/pipelines";
 import { WidgetPipelineAppStage } from "./pipeline-app-stage";
 
+require("dotenv").config();
+
 export class WidgetCicdStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
-    super(scope, id, props);
+    super(scope, id, {
+      ...props,
+      env: {
+        account: process.env.AWS_ACCOUNT_NUMBER,
+        region: process.env.AWS_REGION,
+      },
+    });
 
     const pipeline = new CodePipeline(this, "Pipeline", {
       pipelineName: "WidgetPipeline",
@@ -24,19 +32,22 @@ export class WidgetCicdStack extends cdk.Stack {
           }
         ),
         commands: ["npm ci", "npm run build", "npx cdk synth"],
-        primaryOutputDirectory: "cdk.out"
+        primaryOutputDirectory: "cdk.out",
       }),
     });
 
-    const deployStage = pipeline.addStage(new WidgetPipelineAppStage(this, "Deploy", {
-      env: {account: process.env.AWS_ACCOUNT_NUMBER, region: process.env.AWS_REGION}
-    }));
+    const deployStage = pipeline.addStage(
+      new WidgetPipelineAppStage(this, "Deploy", {
+        env: {
+          account: process.env.AWS_ACCOUNT_NUMBER,
+          region: process.env.AWS_REGION,
+        },
+      })
+    );
 
     deployStage.addPre(
       new ShellStep("Test", {
-        commands: [
-          "npm test"
-        ]
+        commands: ["npm test"],
       })
     );
   }
