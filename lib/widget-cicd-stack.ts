@@ -5,6 +5,7 @@ import {
   CodePipelineSource,
   ShellStep,
 } from "aws-cdk-lib/pipelines";
+import { WidgetPipelineAppStage } from "./pipeline-app-stage";
 
 export class WidgetCicdStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
@@ -26,5 +27,17 @@ export class WidgetCicdStack extends cdk.Stack {
         primaryOutputDirectory: "cdk.out"
       }),
     });
+
+    const deployStage = pipeline.addStage(new WidgetPipelineAppStage(this, "Deploy", {
+      env: {account: process.env.AWS_ACCOUNT_NUMBER, region: process.env.AWS_REGION}
+    }));
+
+    deployStage.addPre(
+      new ShellStep("Test", {
+        commands: [
+          "npm test"
+        ]
+      })
+    );
   }
 }

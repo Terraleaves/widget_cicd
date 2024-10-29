@@ -2,7 +2,7 @@ import * as cdk from "aws-cdk-lib";
 import { Construct } from "constructs";
 import { WidgetCdkStack } from "./widget-app-stack";
 
-export class widgetPipelineAppStage extends cdk.Stage {
+export class WidgetPipelineAppStage extends cdk.Stage {
   constructor(scope: Construct, id: string, props?: cdk.StageProps) {
     super(scope, id, props);
 
