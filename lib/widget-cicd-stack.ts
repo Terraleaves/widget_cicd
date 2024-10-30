@@ -6,7 +6,7 @@ import {
   ShellStep,
 } from "aws-cdk-lib/pipelines";
 import { IntegrationTestStage } from "./integration-test-stage";
-import { ProductionStage } from './deploy-stage';
+import { ProductionDeployStage } from "./production-deploy-stage";
 
 require("dotenv").config();
 
@@ -53,7 +53,7 @@ export class WidgetCicdStack extends cdk.Stack {
     );
 
     const deployStage = pipeline.addStage(
-      new ProductionStage(this, "Deploy", {
+      new ProductionDeployStage(this, "Deploy", {
         env: {
           account: process.env.CDK_DEFAULT_ACCOUNT,
           region: process.env.CDK_DEFAULT_REGION,
