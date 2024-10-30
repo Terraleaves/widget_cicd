@@ -5,7 +5,8 @@ import {
   CodePipelineSource,
   ShellStep,
 } from "aws-cdk-lib/pipelines";
-import { WidgetPipelineAppStage } from "./pipeline-app-stage";
+import { IntegrationTestStage } from "./integration-test-stage";
+import { ProductionStage } from './deploy-stage';
 
 require("dotenv").config();
 
@@ -31,7 +32,7 @@ export class WidgetCicdStack extends cdk.Stack {
     });
 
     const testStage = pipeline.addStage(
-      new WidgetPipelineAppStage(this, "Test", {
+      new IntegrationTestStage(this, "Test", {
         env: {
           account: process.env.CDK_DEFAULT_ACCOUNT,
           region: process.env.CDK_DEFAULT_REGION,
@@ -47,12 +48,12 @@ export class WidgetCicdStack extends cdk.Stack {
 
     testStage.addPost(
       new ShellStep("Destroy", {
-        commands: ["npm ci", "npx cdk destroy"],
+        commands: ["npm ci", "npx cdk destroy -y"],
       })
     );
 
-    pipeline.addStage(
-      new WidgetPipelineAppStage(this, "Deploy", {
+    const deployStage = pipeline.addStage(
+      new ProductionStage(this, "Deploy", {
         env: {
           account: process.env.CDK_DEFAULT_ACCOUNT,
           region: process.env.CDK_DEFAULT_REGION,
