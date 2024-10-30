@@ -9,8 +9,8 @@ require("dotenv").config();
 
 const config = {
   env: {
-    account: process.env.CDK_DEFAULT_ACCOUNT,
-    region: process.env.CDK_DEFAULT_REGION,
+    account: "325861338157",
+    region: "ap-southeast-2",
   },
 };
 

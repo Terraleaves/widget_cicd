@@ -7,7 +7,6 @@ import {
 } from "aws-cdk-lib/pipelines";
 import { IntegrationTestStage } from "./integration-test-stage";
 import { ProductionDeployStage } from "./production-deploy-stage";
-import * as iam from "aws-cdk-lib/aws-iam";
 
 require("dotenv").config();
 
