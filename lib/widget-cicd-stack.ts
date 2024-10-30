@@ -7,6 +7,7 @@ import {
 } from "aws-cdk-lib/pipelines";
 import { IntegrationTestStage } from "./integration-test-stage";
 import { ProductionDeployStage } from "./production-deploy-stage";
+import * as iam from "aws-cdk-lib/aws-iam";
 
 require("dotenv").config();
 
@@ -30,6 +31,12 @@ export class WidgetCicdStack extends cdk.Stack {
         primaryOutputDirectory: "cdk.out",
       }),
     });
+
+    const pipelineRole = pipeline.pipeline.role;
+
+    pipelineRole.addManagedPolicy(
+      iam.ManagedPolicy.fromAwsManagedPolicyName("AdministratorAccess")
+    );
 
     const testStage = pipeline.addStage(
       new IntegrationTestStage(this, "Test", {
