@@ -48,7 +48,7 @@ export class WidgetCicdStack extends cdk.Stack {
 
     testStage.addPost(
       new ShellStep("Destroy", {
-        commands: ["npm ci", "npx cdk destroy -f --all"],
+        commands: ["npm ci", "npx cdk destroy -f"],
       })
     );
 
