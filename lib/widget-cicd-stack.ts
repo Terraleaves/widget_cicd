@@ -7,6 +7,7 @@ import {
 } from "aws-cdk-lib/pipelines";
 import { IntegrationTestStage } from "./integration-test-stage";
 import { ProductionDeployStage } from "./production-deploy-stage";
+import * as iam from "aws-cdk-lib/aws-iam";
 
 require("dotenv").config();
 
@@ -14,8 +15,16 @@ export class WidgetCicdStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
+    const role = new iam.Role(this, "AdminRole", {
+      assumedBy: new iam.ArnPrincipal("arn:aws:iam::325861338157:user/Kiyo"),
+      managedPolicies: [iam.ManagedPolicy.fromAwsManagedPolicyName("AdministratorAccess")],
+    });
+
+
+
     const pipeline = new CodePipeline(this, "Pipeline", {
       pipelineName: "WidgetPipeline",
+      role: role,
       synth: new ShellStep("Synth", {
         input: CodePipelineSource.connection(
           "Terraleaves/widget_cicd",
@@ -48,11 +57,11 @@ export class WidgetCicdStack extends cdk.Stack {
 
     testStage.addPost(
       new ShellStep("Destroy", {
-        commands: ["npm ci", "npx cdk destroy -y"],
+        commands: ["npm ci", "npx cdk destroy -f --all"],
       })
     );
 
-    const deployStage = pipeline.addStage(
+    pipeline.addStage(
       new ProductionDeployStage(this, "Deploy", {
         env: {
           account: process.env.CDK_DEFAULT_ACCOUNT,

@@ -7,8 +7,8 @@ test('Template should create widget instance role', () => {
     // WHEN
   const stack = new WidgetCdk.WidgetCdkStack(app, 'UnitTestStack', {
     env: {
-        account: "",
-        region: ""
+        account: "325861338157",
+        region: "ap-southeast-2"
     }
   });
     // THEN
@@ -64,8 +64,8 @@ test('Template Should create EC2 launch templace', () => {
     // WHEN
   const stack = new WidgetCdk.WidgetCdkStack(app, 'UnitTestStack', {
     env: {
-        account: "",
-        region: ""
+        account: "325861338157",
+        region: "ap-southeast-2"
     }
   });
     // THEN
@@ -84,8 +84,8 @@ test('Template Should create EC2 launch templace', () => {
     // WHEN
   const stack = new WidgetCdk.WidgetCdkStack(app, 'UnitTestStack', {
     env: {
-        account: "",
-        region: ""
+        account: "325861338157",
+        region: "ap-southeast-2"
     }
   });
     // THEN
@@ -104,8 +104,8 @@ test('Template Should create EC2 auto scaling group', () => {
     // WHEN
   const stack = new WidgetCdk.WidgetCdkStack(app, 'UnitTestStack', {
     env: {
-        account: "",
-        region: ""
+        account: "325861338157",
+        region: "ap-southeast-2"
     }
   });
     // THEN
@@ -128,8 +128,8 @@ test('Template Should create EC2 application load balancer', () => {
     // WHEN
   const stack = new WidgetCdk.WidgetCdkStack(app, 'UnitTestStack', {
     env: {
-        account: "",
-        region: ""
+        account: "325861338157",
+        region: "ap-southeast-2"
     }
   });
     // THEN
@@ -146,8 +146,8 @@ test('Template Should create EC2 application load balancer listener', () => {
     // WHEN
   const stack = new WidgetCdk.WidgetCdkStack(app, 'UnitTestStack', {
     env: {
-        account: "",
-        region: ""
+        account: "325861338157",
+        region: "ap-southeast-2"
     }
   });
     // THEN
@@ -165,8 +165,8 @@ test('Template Should define EC2 application load balancer target group', () => 
     // WHEN
   const stack = new WidgetCdk.WidgetCdkStack(app, 'UnitTestStack', {
     env: {
-        account: "",
-        region: ""
+        account: "325861338157",
+        region: "ap-southeast-2"
     }
   });
     // THEN
