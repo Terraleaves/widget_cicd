@@ -15,16 +15,8 @@ export class WidgetCicdStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
-    const role = new iam.Role(this, "AdminRole", {
-      assumedBy: new iam.ArnPrincipal("arn:aws:iam::325861338157:user/Kiyo"),
-      managedPolicies: [iam.ManagedPolicy.fromAwsManagedPolicyName("AdministratorAccess")],
-    });
-
-
-
     const pipeline = new CodePipeline(this, "Pipeline", {
       pipelineName: "WidgetPipeline",
-      role: role,
       synth: new ShellStep("Synth", {
         input: CodePipelineSource.connection(
           "Terraleaves/widget_cicd",
