@@ -70,10 +70,18 @@ export class WidgetCicdStack extends cdk.Stack {
       })
     );
 
+    // Add a ShellStep to wait for the load balancer
+    const waitForLoadBalancer = new ShellStep("WaitForLoadBalancer", {
+      commands: ["echo 'Waiting for load balancer to be ready...'"],
+    });
+
+    // Add the integration test step after confirming the load balancer is ready
+    testStage.addPost(waitForLoadBalancer );
+
     testStage.addPost(
       new ShellStep("IntegrationTest", {
         envFromCfnOutputs: {
-          url: integrationTest.lbURL
+          url: integrationTest.lbURL,
         },
         commands: ["npm ci", "curl -Ssf $url"],
       })
