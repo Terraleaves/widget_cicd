@@ -7,6 +7,6 @@ export class IntegrationTestStage extends cdk.Stage {
     super(scope, id, props);
 
     // Create Stack
-    const testStack = new WidgetCdkStack(this, "IntegrationTestStack");
+    new WidgetCdkStack(this, "IntegrationTestStack");
   }
 }
