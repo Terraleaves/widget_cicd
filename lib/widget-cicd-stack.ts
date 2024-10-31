@@ -55,14 +55,14 @@ export class WidgetCicdStack extends cdk.Stack {
       }),
     });
 
-    const integrationTestStage = new IntegrationTestStage(this, "Test", {
+    const integrationTest = new IntegrationTestStage(this, "Test", {
       env: {
         account: process.env.CDK_DEFAULT_ACCOUNT,
         region: process.env.CDK_DEFAULT_REGION,
       },
     });
 
-    const testStage = pipeline.addStage(integrationTestStage);
+    const testStage = pipeline.addStage(integrationTest);
 
     testStage.addPre(
       new ShellStep("UnitTest", {
@@ -72,7 +72,10 @@ export class WidgetCicdStack extends cdk.Stack {
 
     testStage.addPost(
       new ShellStep("IntegrationTest", {
-        commands: ["npm ci", `curl -Ssf ${integrationTestStage.lbURL}`],
+        envFromCfnOutputs: {
+          url: integrationTest.lbURL
+        },
+        commands: ["npm ci", `curl -Ssf ${integrationTest.lbURL}`],
       })
     );
 
