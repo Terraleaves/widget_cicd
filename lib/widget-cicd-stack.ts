@@ -63,21 +63,21 @@ export class WidgetCicdStack extends cdk.Stack {
       },
     });
 
-    // const testStack = new WidgetCdkStack(this, "IntegrationTestStack");
+    const testStack = new WidgetCdkStack(this, "IntegrationTestStack");
 
-    // const testStage = pipeline.addStage(integrationTest);
+    const testStage = pipeline.addStage(integrationTest);
 
-    // testStage.addPre(
-    //   new ShellStep("UnitTest", {
-    //     commands: ["npm ci", "npm test"],
-    //   })
-    // );
+    testStage.addPre(
+      new ShellStep("UnitTest", {
+        commands: ["npm ci", "npm test"],
+      })
+    );
 
-    // testStage.addPost(
-    //   new ShellStep("IntegrationTest", {
-    //     commands: ["npm ci", `curl -Ssf http://${testStack.loadBalancerDnsName}`],
-    //   })
-    // );
+    testStage.addPost(
+      new ShellStep("IntegrationTest", {
+        commands: ["npm ci", `curl -Ssf http://${testStack.loadBalancerDnsName}`],
+      })
+    );
 
     const deployStage = pipeline.addStage(
       new ProductionDeployStage(this, "Deploy", {
@@ -90,7 +90,7 @@ export class WidgetCicdStack extends cdk.Stack {
 
     deployStage.addPre(
       new ShellStep("DestroyTestStack", {
-        commands: ["npm ci", "npx cdk synth --context vpc-provider:account=325861338157:filter.isDefault=true:region=ap-southeast-2:returnAsymmetricSubnets=true --context ami:account=325861338157:filters.image-type.0=machine:filters.name.0=widget-instance-ami:filters.state.0=available:region=ap-southeast-2", "npm run integ-test"],
+        commands: ["npm ci", "npx cdk destroy IntegrationTestStack -f"],
       })
     );
   }
