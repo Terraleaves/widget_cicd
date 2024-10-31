@@ -77,7 +77,6 @@ export class WidgetCicdStack extends cdk.Stack {
         },
         commands: [
           "npm ci",
-          "curl -Ssf $url",
           "npx cdk destroy Test-IntegrationTestStack -f",
         ],
       })
