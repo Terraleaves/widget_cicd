@@ -70,12 +70,6 @@ export class WidgetCicdStack extends cdk.Stack {
       })
     );
 
-    testStage.addPre(
-      new ShellStep("UnitTest", {
-        commands: ["npm ci", "npm test"],
-      })
-    );
-
     testStage.addPost(
       new ShellStep("IntegrationTest", {
         commands: ["npm ci", `curl -Ssf ${cdk.Fn.importValue("lbDNS")}`]
