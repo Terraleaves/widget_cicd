@@ -71,16 +71,20 @@ export class WidgetCicdStack extends cdk.Stack {
     );
 
     testStage.addPost(
-      new ShellStep("IntegrationTest", {
-        envFromCfnOutputs: {
-          url: integrationTest.cfnOutputValue,
-        },
-        commands: [
-          "npm ci",
-          "npx cdk destroy Test-IntegrationTestStack -f",
-        ],
+      new ShellStep("DestroyTestStack", {
+        commands: ["npm ci", "npx cdk destroy IntegrationTestStack -f"],
       })
     );
+
+    // testStage.addPost(
+    //   new ShellStep("IntegrationTest", {
+    //     envFromCfnOutputs: {
+    //       url: integrationTest.cfnOutputValue
+    //     },
+    //     commands: ["npm ci", "curl -Ssf $url", "npx cdk destroy IntegrationTestStack -f --verbose"]
+    //   })
+    // )
+
 
     pipeline.addStage(
       new ProductionDeployStage(this, "Deploy", {
@@ -90,5 +94,8 @@ export class WidgetCicdStack extends cdk.Stack {
         },
       })
     );
+
+
+
   }
 }
