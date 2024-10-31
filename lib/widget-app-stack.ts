@@ -15,6 +15,8 @@ const config = {
 };
 
 export class WidgetCdkStack extends cdk.Stack {
+  public lbDnsName: string;
+
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, { ...props, env: config.env });
 
@@ -43,6 +45,7 @@ export class WidgetCdkStack extends cdk.Stack {
       defaultVPC,
       securityGroup
     );
+    this.lbDnsName = loadBalancer.loadBalancerDnsName;
 
     // Add Listener to LB (for HTTP on Port 80)
     const listener = this.createApplicationListener(loadBalancer);

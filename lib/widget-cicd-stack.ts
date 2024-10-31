@@ -3,6 +3,7 @@ import { Construct } from "constructs";
 import {
   CodePipeline,
   CodePipelineSource,
+  ManualApprovalStep,
   ShellStep,
 } from "aws-cdk-lib/pipelines";
 import { IntegrationTestStage } from "./integration-test-stage";
@@ -12,8 +13,8 @@ import {
   Role,
   ServicePrincipal,
   PolicyStatement,
-  Effect
-} from 'aws-cdk-lib/aws-iam';
+  Effect,
+} from "aws-cdk-lib/aws-iam";
 
 require("dotenv").config();
 
@@ -21,20 +22,20 @@ export class WidgetCicdStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
-    const pipelineServiceRole = new Role(this, 'PipelineServiceRole', {
-      assumedBy: new ServicePrincipal("codepipeline.amazonaws.com")
-    })
+    const pipelineServiceRole = new Role(this, "PipelineServiceRole", {
+      assumedBy: new ServicePrincipal("codepipeline.amazonaws.com"),
+    });
 
     pipelineServiceRole.addToPolicy(
       new PolicyStatement({
         effect: Effect.ALLOW,
-        resources: ['*'],
-        actions: ["*"]
+        resources: ["*"],
+        actions: ["*"],
       })
     );
 
     pipelineServiceRole.addManagedPolicy(
-      ManagedPolicy.fromAwsManagedPolicyName('AdministratorAccess')
+      ManagedPolicy.fromAwsManagedPolicyName("AdministratorAccess")
     );
 
     const pipeline = new CodePipeline(this, "Pipeline", {
@@ -54,14 +55,14 @@ export class WidgetCicdStack extends cdk.Stack {
       }),
     });
 
-    const testStage = pipeline.addStage(
-      new IntegrationTestStage(this, "Test", {
-        env: {
-          account: process.env.CDK_DEFAULT_ACCOUNT,
-          region: process.env.CDK_DEFAULT_REGION,
-        },
-      })
-    );
+    const integrationTestStage = new IntegrationTestStage(this, "Test", {
+      env: {
+        account: process.env.CDK_DEFAULT_ACCOUNT,
+        region: process.env.CDK_DEFAULT_REGION,
+      },
+    });
+
+    const testStage = pipeline.addStage(integrationTestStage);
 
     testStage.addPre(
       new ShellStep("UnitTest", {
@@ -70,17 +71,23 @@ export class WidgetCicdStack extends cdk.Stack {
     );
 
     testStage.addPost(
-      new ShellStep("Destroy", {
-        commands: ["npm ci", "npx cdk destroy IntegrationTestStack -f"],
+      new ShellStep("IntegrationTest", {
+        commands: ["npm ci", `curl -Ssf ${integrationTestStage.lbURL}`],
       })
     );
 
-    pipeline.addStage(
+    const deployStage = pipeline.addStage(
       new ProductionDeployStage(this, "Deploy", {
         env: {
           account: process.env.CDK_DEFAULT_ACCOUNT,
           region: process.env.CDK_DEFAULT_REGION,
         },
+      })
+    );
+
+    deployStage.addPre(
+      new ShellStep("DestroyTestStack", {
+        commands: ["npm ci", "npx cdk destroy IntegrationTestStack -f"],
       })
     );
   }
