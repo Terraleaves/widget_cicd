@@ -72,11 +72,10 @@ export class WidgetCicdStack extends cdk.Stack {
         commands: ["npm ci", "npm test"],
       })
     );
-    const dns = cdk.Fn.importValue("lbDNS");
 
     testStage.addPost(
       new ShellStep("IntegrationTest", {
-        commands: ["npm ci", `curl -Ssf http://${dns}`],
+        commands: ["npm ci", `curl -Ssf http://${testStack.loadBalancerDnsName}`],
       })
     );
 
@@ -91,7 +90,7 @@ export class WidgetCicdStack extends cdk.Stack {
 
     deployStage.addPre(
       new ShellStep("DestroyTestStack", {
-        commands: ["npm ci", "npx cdk destroy IntegrationTestStack -f"],
+        commands: ["npm ci", "npx cdk destroy IntegrationTestStack -f --require-approval never"],
       })
     );
   }
