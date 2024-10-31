@@ -7,12 +7,34 @@ import {
   ShellStep,
 } from "aws-cdk-lib/pipelines";
 import { ProductionDeployStage } from "./production-deploy-stage";
-
+import {
+  ManagedPolicy,
+  Role,
+  ServicePrincipal,
+  PolicyStatement,
+  Effect,
+} from "aws-cdk-lib/aws-iam";
 require("dotenv").config();
 
 export class WidgetCicdStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
+
+    const pipelineServiceRole = new Role(this, "PipelineServiceRole", {
+      assumedBy: new ServicePrincipal("codepipeline.amazonaws.com"),
+    });
+
+    pipelineServiceRole.addToPolicy(
+      new PolicyStatement({
+        effect: Effect.ALLOW,
+        resources: ["*"],
+        actions: ["*"],
+      })
+    );
+
+    pipelineServiceRole.addManagedPolicy(
+      ManagedPolicy.fromAwsManagedPolicyName("AdministratorAccess")
+    );
 
     const pipeline = new CodePipeline(this, "Pipeline", {
       pipelineName: "WidgetPipeline",
