@@ -71,7 +71,7 @@ export class WidgetCicdStack extends cdk.Stack {
     );
 
     testStage.addPost(
-      new ShellStep("IntegrationTest", {
+      new ShellStep("IntegrationTest&Clean", {
         envFromCfnOutputs: {
           url: integrationTest.cfnOutputValue
         },
