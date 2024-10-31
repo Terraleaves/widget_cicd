@@ -90,7 +90,7 @@ export class WidgetCicdStack extends cdk.Stack {
 
     deployStage.addPre(
       new ShellStep("DestroyTestStack", {
-        commands: ["npm ci", "cdk synth --context vpc-provider:account=325861338157:filter.isDefault=true:region=ap-southeast-2:returnAsymmetricSubnets=true --context ami:account=325861338157:filters.image-type.0=machine:filters.name.0=widget-instance-ami:filters.state.0=available:region=ap-southeast-2", "npm run integ-test"],
+        commands: ["npm ci", "npx cdk synth --context vpc-provider:account=325861338157:filter.isDefault=true:region=ap-southeast-2:returnAsymmetricSubnets=true --context ami:account=325861338157:filters.image-type.0=machine:filters.name.0=widget-instance-ami:filters.state.0=available:region=ap-southeast-2", "npm run integ-test"],
       })
     );
   }
