@@ -53,14 +53,6 @@ export class WidgetCicdStack extends cdk.Stack {
       })
     );
 
-    pipeline.pipeline.addToRolePolicy(
-      new iam.PolicyStatement({
-        resources: ["*"],
-        actions: ["*"]
-      })
-    );
-
-
     pipeline.addStage(
       new ProductionDeployStage(this, "Deploy", {
         env: {
