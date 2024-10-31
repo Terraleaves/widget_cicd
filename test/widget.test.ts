@@ -79,26 +79,6 @@ test('Template Should create EC2 launch templace', () => {
   });
 });
 
-test('Template Should create EC2 launch templace', () => {
-  const app = new cdk.App();
-    // WHEN
-  const stack = new WidgetCdk.WidgetCdkStack(app, 'UnitTestStack', {
-    env: {
-        account: "325861338157",
-        region: "ap-southeast-2"
-    }
-  });
-    // THEN
-  const template = Template.fromStack(stack);
-
-  template.hasResourceProperties("AWS::EC2::LaunchTemplate", {
-    LaunchTemplateData: {
-      InstanceType: "t2.micro",
-      ImageId: "ami-1234"
-    }
-  });
-});
-
 test('Template Should create EC2 auto scaling group', () => {
   const app = new cdk.App();
     // WHEN

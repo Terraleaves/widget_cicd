@@ -63,8 +63,6 @@ export class WidgetCicdStack extends cdk.Stack {
       },
     });
 
-    const testStack = new WidgetCdkStack(scope, "IntegrationTestStack");
-
     const testStage = pipeline.addStage(integrationTest);
 
     testStage.addPre(
@@ -75,7 +73,7 @@ export class WidgetCicdStack extends cdk.Stack {
 
     testStage.addPost(
       new ShellStep("IntegrationTest", {
-        commands: ["npm ci", `curl -Ssf http://${testStack.loadBalancerDnsName}`],
+        commands: ["npm ci", `curl -Ssf http://${integrationTest.loadBalancerDnsName}`],
       })
     );
 
