@@ -15,7 +15,6 @@ import {
   PolicyStatement,
   Effect,
 } from "aws-cdk-lib/aws-iam";
-import { WidgetCdkStack } from "./widget-app-stack";
 
 require("dotenv").config();
 
@@ -63,8 +62,6 @@ export class WidgetCicdStack extends cdk.Stack {
       },
     });
 
-    const testStack = new WidgetCdkStack(this, "IntegrationTestStack");
-
     const testStage = pipeline.addStage(integrationTest);
 
     testStage.addPre(
@@ -74,8 +71,12 @@ export class WidgetCicdStack extends cdk.Stack {
     );
 
     testStage.addPost(
-      new ShellStep("IntegrationTest", {
-        commands: ["npm ci", `curl -Ssf http://${testStack.loadBalancerDnsName}`],
+      new ManualApprovalStep("Approve")
+    );
+
+    testStage.addPost(
+      new ShellStep("DestroyTestStack", {
+        commands: ["npm ci", "npx cdk destroy IntegrationTestStack -f"],
       })
     );
 
@@ -88,10 +89,6 @@ export class WidgetCicdStack extends cdk.Stack {
       })
     );
 
-    deployStage.addPre(
-      new ShellStep("DestroyTestStack", {
-        commands: ["npm ci", "npx cdk destroy IntegrationTestStack -f"],
-      })
-    );
+
   }
 }
