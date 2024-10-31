@@ -75,7 +75,7 @@ export class WidgetCicdStack extends cdk.Stack {
         envFromCfnOutputs: {
           url: integrationTest.lbURL
         },
-        commands: ["npm ci", `curl -Ssf ${integrationTest.lbURL}`],
+        commands: ["npm ci", "curl -Ssf $url"],
       })
     );
 
