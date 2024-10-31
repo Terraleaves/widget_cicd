@@ -75,7 +75,7 @@ export class WidgetCicdStack extends cdk.Stack {
         envFromCfnOutputs: {
           url: integrationTest.cfnOutputValue
         },
-        commands: ["npm ci", "curl -Ssf $url", "npx cdk destroy IntegrationTestStack -f --verbose"]
+        commands: ["npm ci", "curl -Ssf $url", "npx cdk destroy IntegrationTestStack -f"]
       })
     )
 
