@@ -6,6 +6,7 @@ import {
   ManualApprovalStep,
   ShellStep,
 } from "aws-cdk-lib/pipelines";
+import { IntegrationTestStage } from "./integration-test-stage";
 import { ProductionDeployStage } from "./production-deploy-stage";
 import {
   ManagedPolicy,
@@ -14,6 +15,8 @@ import {
   PolicyStatement,
   Effect,
 } from "aws-cdk-lib/aws-iam";
+import { WidgetCdkStack } from "./widget-app-stack";
+
 require("dotenv").config();
 
 export class WidgetCicdStack extends cdk.Stack {
@@ -53,6 +56,29 @@ export class WidgetCicdStack extends cdk.Stack {
       }),
     });
 
+    const integrationTest = new IntegrationTestStage(this, "Test", {
+      env: {
+        account: process.env.CDK_DEFAULT_ACCOUNT,
+        region: process.env.CDK_DEFAULT_REGION,
+      },
+    });
+
+    // const testStack = new WidgetCdkStack(this, "IntegrationTestStack");
+
+    // const testStage = pipeline.addStage(integrationTest);
+
+    // testStage.addPre(
+    //   new ShellStep("UnitTest", {
+    //     commands: ["npm ci", "npm test"],
+    //   })
+    // );
+
+    // testStage.addPost(
+    //   new ShellStep("IntegrationTest", {
+    //     commands: ["npm ci", `curl -Ssf http://${testStack.loadBalancerDnsName}`],
+    //   })
+    // );
+
     const deployStage = pipeline.addStage(
       new ProductionDeployStage(this, "Deploy", {
         env: {
@@ -63,14 +89,8 @@ export class WidgetCicdStack extends cdk.Stack {
     );
 
     deployStage.addPre(
-      new ShellStep("UnitTest", {
-        commands: ["npm ci", "npm test"]
-      })
-    );
-
-    deployStage.addPre(
-      new ShellStep("IntegrationTest", {
-        commands: ["npm ci", "npm run integ-test"]
+      new ShellStep("DestroyTestStack", {
+        commands: ["npm ci", "cdk synth --context vpc-provider:account=325861338157:filter.isDefault=true:region=ap-southeast-2:returnAsymmetricSubnets=true --context ami:account=325861338157:filters.image-type.0=machine:filters.name.0=widget-instance-ami:filters.state.0=available:region=ap-southeast-2", "npm run integ-test"],
       })
     );
   }
