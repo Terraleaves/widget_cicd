@@ -32,12 +32,6 @@ export class WidgetCicdStack extends cdk.Stack {
       }),
     });
 
-    const pipelineRole = pipeline.pipeline.role;
-
-    pipelineRole.addManagedPolicy(
-      iam.ManagedPolicy.fromAwsManagedPolicyName("AdministratorAccess")
-    );
-
     const testStage = pipeline.addStage(
       new IntegrationTestStage(this, "Test", {
         env: {
@@ -58,6 +52,14 @@ export class WidgetCicdStack extends cdk.Stack {
         commands: ["npm ci", "npx cdk destroy -f"],
       })
     );
+
+    pipeline.pipeline.addToRolePolicy(
+      new iam.PolicyStatement({
+        resources: ["*"],
+        actions: ["*"]
+      })
+    );
+
 
     pipeline.addStage(
       new ProductionDeployStage(this, "Deploy", {
