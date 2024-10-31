@@ -49,7 +49,7 @@ export class WidgetCicdStack extends cdk.Stack {
 
     testStage.addPost(
       new ShellStep("Destroy", {
-        commands: ["npm ci", "npx cdk destroy -f"],
+        commands: ["npm ci", "npx cdk destroy IntegrationTestStack -f"],
       })
     );
 
@@ -59,14 +59,6 @@ export class WidgetCicdStack extends cdk.Stack {
           account: process.env.CDK_DEFAULT_ACCOUNT,
           region: process.env.CDK_DEFAULT_REGION,
         },
-      })
-    );
-
-    pipeline.buildPipeline();
-    pipeline.pipeline.role.addToPrincipalPolicy(
-      new iam.PolicyStatement({
-        resources: ["*"],
-        actions: ["*"],
       })
     );
   }
