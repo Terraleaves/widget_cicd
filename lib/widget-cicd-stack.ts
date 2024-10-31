@@ -25,6 +25,7 @@ export class WidgetCicdStack extends cdk.Stack {
       assumedBy: new ServicePrincipal("codepipeline.amazonaws.com"),
     });
 
+
     pipelineServiceRole.addToPolicy(
       new PolicyStatement({
         effect: Effect.ALLOW,
@@ -39,6 +40,7 @@ export class WidgetCicdStack extends cdk.Stack {
 
     const pipeline = new CodePipeline(this, "Pipeline", {
       pipelineName: "WidgetPipeline",
+      role: pipelineServiceRole,
       synth: new ShellStep("Synth", {
         input: CodePipelineSource.connection(
           "Terraleaves/widget_cicd",
@@ -53,6 +55,7 @@ export class WidgetCicdStack extends cdk.Stack {
         primaryOutputDirectory: "cdk.out",
       }),
     });
+
 
     const deployStage = pipeline.addStage(
       new ProductionDeployStage(this, "Deploy", {
