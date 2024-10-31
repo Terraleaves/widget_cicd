@@ -70,15 +70,17 @@ export class WidgetCicdStack extends cdk.Stack {
       })
     );
 
-    testStage.addPost(
-      new ManualApprovalStep("Approve")
+    testStage.addPre(
+      new ShellStep("UnitTest", {
+        commands: ["npm ci", "npm test"],
+      })
     );
 
     testStage.addPost(
-      new ShellStep("DestroyTestStack", {
-        commands: ["npm ci", "npx cdk destroy IntegrationTestStack -f"],
+      new ShellStep("IntegrationTest", {
+        commands: ["npm ci", `curl -Ssf ${cdk.Fn.importValue("lbDNS")}`]
       })
-    );
+    )
 
     const deployStage = pipeline.addStage(
       new ProductionDeployStage(this, "Deploy", {
@@ -86,6 +88,12 @@ export class WidgetCicdStack extends cdk.Stack {
           account: process.env.CDK_DEFAULT_ACCOUNT,
           region: process.env.CDK_DEFAULT_REGION,
         },
+      })
+    );
+
+    deployStage.addPost(
+      new ShellStep("DestroyTestStack", {
+        commands: ["npm ci", "npx cdk destroy IntegrationTestStack -f"],
       })
     );
 
