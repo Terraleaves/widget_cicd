@@ -72,7 +72,10 @@ export class WidgetCicdStack extends cdk.Stack {
 
     testStage.addPost(
       new ShellStep("IntegrationTest", {
-        commands: ["npm ci", `curl -Ssf http://${cdk.Fn.importValue("lbDNS")}`]
+        envFromCfnOutputs: {
+          url: integrationTest.cfnOutputValue
+        },
+        commands: ["npm ci", "curl -Ssf $url"]
       })
     )
 
@@ -91,6 +94,7 @@ export class WidgetCicdStack extends cdk.Stack {
       })
     );
 
+    pipeline.buildPipeline();
 
   }
 }

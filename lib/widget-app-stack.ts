@@ -15,7 +15,7 @@ const config = {
 };
 
 export class WidgetCdkStack extends cdk.Stack {
-  public readonly loadBalancerDnsName: string;
+  public readonly cfnOutputValue: cdk.CfnOutput;
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, { ...props, env: config.env });
 
@@ -44,18 +44,17 @@ export class WidgetCdkStack extends cdk.Stack {
       defaultVPC,
       securityGroup
     );
-    this.loadBalancerDnsName = loadBalancer.loadBalancerDnsName;
-    new cdk.CfnOutput(this, "LoadBalancerDNS", {
+    this.cfnOutputValue = new cdk.CfnOutput(this, "LoadBalancerDNS", {
       value: loadBalancer.loadBalancerDnsName,
       exportName: "lbDNS",
     });
-
 
     // Add Listener to LB (for HTTP on Port 80)
     const listener = this.createApplicationListener(loadBalancer);
 
     // Add Target Group to LB
     this.defineTarget(listener, autoScalingGroup);
+
   }
 
   private getDefaultVPC(): cdk.aws_ec2.IVpc {
