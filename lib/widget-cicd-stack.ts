@@ -61,5 +61,21 @@ export class WidgetCicdStack extends cdk.Stack {
         },
       })
     );
+
+    pipeline.buildPipeline();
+    pipeline.pipeline.addToRolePolicy(
+      new iam.PolicyStatement({
+        resources: [
+          "arn:aws:cloudformation:ap-southeast-2:325861338157:stack/WidgetCicdStack/*"
+        ],
+        actions: [
+          "cloudformation:DescribeStacks",
+          "cloudformation:DeleteStack",
+          "cloudformation:ListStackResources",
+          "cloudformation:GetTemplateSummary"
+        ]
+      })
+    );
   }
+
 }
