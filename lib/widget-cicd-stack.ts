@@ -6,38 +6,13 @@ import {
   ManualApprovalStep,
   ShellStep,
 } from "aws-cdk-lib/pipelines";
-import { IntegrationTestStage } from "./integration-test-stage";
 import { ProductionDeployStage } from "./production-deploy-stage";
-import {
-  ManagedPolicy,
-  Role,
-  ServicePrincipal,
-  PolicyStatement,
-  Effect,
-} from "aws-cdk-lib/aws-iam";
-import { WidgetCdkStack } from "./widget-app-stack";
 
 require("dotenv").config();
 
 export class WidgetCicdStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
-
-    const pipelineServiceRole = new Role(this, "PipelineServiceRole", {
-      assumedBy: new ServicePrincipal("codepipeline.amazonaws.com"),
-    });
-
-    pipelineServiceRole.addToPolicy(
-      new PolicyStatement({
-        effect: Effect.ALLOW,
-        resources: ["*"],
-        actions: ["*"],
-      })
-    );
-
-    pipelineServiceRole.addManagedPolicy(
-      ManagedPolicy.fromAwsManagedPolicyName("AdministratorAccess")
-    );
 
     const pipeline = new CodePipeline(this, "Pipeline", {
       pipelineName: "WidgetPipeline",
@@ -56,29 +31,6 @@ export class WidgetCicdStack extends cdk.Stack {
       }),
     });
 
-    const integrationTest = new IntegrationTestStage(this, "Test", {
-      env: {
-        account: process.env.CDK_DEFAULT_ACCOUNT,
-        region: process.env.CDK_DEFAULT_REGION,
-      },
-    });
-
-    const testStack = new WidgetCdkStack(this, "IntegrationTestStack");
-
-    const testStage = pipeline.addStage(integrationTest);
-
-    testStage.addPre(
-      new ShellStep("UnitTest", {
-        commands: ["npm ci", "npm test"],
-      })
-    );
-
-    testStage.addPost(
-      new ShellStep("IntegrationTest", {
-        commands: ["npm ci", `curl -Ssf http://${testStack.loadBalancerDnsName}`],
-      })
-    );
-
     const deployStage = pipeline.addStage(
       new ProductionDeployStage(this, "Deploy", {
         env: {
@@ -89,8 +41,14 @@ export class WidgetCicdStack extends cdk.Stack {
     );
 
     deployStage.addPre(
-      new ShellStep("DestroyTestStack", {
-        commands: ["npm ci", "npx cdk destroy IntegrationTestStack -f --require-approval never"],
+      new ShellStep("UnitTest", {
+        commands: ["npm ci", "npm test"]
+      })
+    );
+
+    deployStage.addPre(
+      new ShellStep("IntegrationTest", {
+        commands: ["npm ci", "npm run integ-test"]
       })
     );
   }
