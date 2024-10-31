@@ -40,7 +40,7 @@ export class WidgetCicdStack extends cdk.Stack {
 
     const pipeline = new CodePipeline(this, "Pipeline", {
       pipelineName: "WidgetPipeline",
-      role: pipelineServiceRole,
+      role: pipelineServiceRole.withoutPolicyUpdates(),
       synth: new ShellStep("Synth", {
         input: CodePipelineSource.connection(
           "Terraleaves/widget_cicd",
