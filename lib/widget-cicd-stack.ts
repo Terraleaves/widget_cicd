@@ -6,7 +6,6 @@ import {
   ManualApprovalStep,
   ShellStep,
 } from "aws-cdk-lib/pipelines";
-import { IntegrationTestStage } from "./integration-test-stage";
 import { ProductionDeployStage } from "./production-deploy-stage";
 import {
   ManagedPolicy,
