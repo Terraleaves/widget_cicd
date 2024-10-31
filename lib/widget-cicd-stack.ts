@@ -22,7 +22,7 @@ export class WidgetCicdStack extends cdk.Stack {
     super(scope, id, props);
 
     const pipelineServiceRole = new Role(this, "PipelineServiceRole", {
-      assumedBy: new ServicePrincipal("codepipeline.amazonaws.com"),
+      assumedBy: new ServicePrincipal("codebuild.amazonaws.com"),
     });
 
 
