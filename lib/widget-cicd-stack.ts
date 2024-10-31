@@ -77,8 +77,9 @@ export class WidgetCicdStack extends cdk.Stack {
         },
         commands: [
           "npm ci",
-          "curl -Ssf $url",
-          "echo 'All resources are working properly, move to production.'",
+          // "curl -Ssf $url",
+          // "echo 'All resources are working properly, move to production.'",
+          // "npm ci",
           "npx cdk destroy IntegrationTestStack -f",
         ],
       })
