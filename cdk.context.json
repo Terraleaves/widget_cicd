@@ -31,5 +31,38 @@
       }
     ]
   },
-  "ami:account=325861338157:filters.image-type.0=machine:filters.name.0=widget-instance-ami:filters.state.0=available:region=ap-southeast-2": "ami-08eb7eb144d8f1780"
+  "ami:account=325861338157:filters.image-type.0=machine:filters.name.0=widget-instance-ami:filters.state.0=available:region=ap-southeast-2": "ami-08eb7eb144d8f1780",
+  "vpc-provider:account=116981789059:filter.isDefault=true:region=ap-southeast-2:returnAsymmetricSubnets=true": {
+    "vpcId": "vpc-0f2460f3c993b83dd",
+    "vpcCidrBlock": "172.31.0.0/16",
+    "ownerAccountId": "116981789059",
+    "availabilityZones": [],
+    "subnetGroups": [
+      {
+        "name": "Public",
+        "type": "Public",
+        "subnets": [
+          {
+            "subnetId": "subnet-00a04d400b29f7da5",
+            "cidr": "172.31.0.0/20",
+            "availabilityZone": "ap-southeast-2a",
+            "routeTableId": "rtb-06827ef7519dade04"
+          },
+          {
+            "subnetId": "subnet-042f026b16b68fc35",
+            "cidr": "172.31.32.0/20",
+            "availabilityZone": "ap-southeast-2b",
+            "routeTableId": "rtb-06827ef7519dade04"
+          },
+          {
+            "subnetId": "subnet-0e00c0a54bcdfc906",
+            "cidr": "172.31.16.0/20",
+            "availabilityZone": "ap-southeast-2c",
+            "routeTableId": "rtb-06827ef7519dade04"
+          }
+        ]
+      }
+    ]
+  },
+  "ami:account=116981789059:filters.image-type.0=machine:filters.name.0=widget-instance-ami:filters.state.0=available:region=ap-southeast-2": "ami-08eb7eb144d8f1780"
 }
