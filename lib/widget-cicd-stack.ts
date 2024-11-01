@@ -21,26 +21,8 @@ export class WidgetCicdStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
-    const pipelineServiceRole = new Role(this, "PipelineServiceRole", {
-      assumedBy: new ServicePrincipal("codebuild.amazonaws.com"),
-    });
-
-
-    pipelineServiceRole.addToPolicy(
-      new PolicyStatement({
-        effect: Effect.ALLOW,
-        resources: ["*"],
-        actions: ["*"],
-      })
-    );
-
-    pipelineServiceRole.addManagedPolicy(
-      ManagedPolicy.fromAwsManagedPolicyName("AdministratorAccess")
-    );
-
     const pipeline = new CodePipeline(this, "Pipeline", {
       pipelineName: "WidgetPipeline",
-      role: pipelineServiceRole.withoutPolicyUpdates(),
       synth: new ShellStep("Synth", {
         input: CodePipelineSource.connection(
           "Terraleaves/widget_cicd",
