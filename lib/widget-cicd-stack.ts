@@ -3,17 +3,9 @@ import { Construct } from "constructs";
 import {
   CodePipeline,
   CodePipelineSource,
-  ManualApprovalStep,
   ShellStep,
 } from "aws-cdk-lib/pipelines";
 import { ProductionDeployStage } from "./production-deploy-stage";
-import {
-  ManagedPolicy,
-  Role,
-  ServicePrincipal,
-  PolicyStatement,
-  Effect,
-} from "aws-cdk-lib/aws-iam";
 
 require("dotenv").config();
 
@@ -30,7 +22,7 @@ export class WidgetCicdStack extends cdk.Stack {
           {
             // Use CodeStar connection
             connectionArn:
-              "arn:aws:codestar-connections:us-east-2:325861338157:connection/dc5275a2-85db-48f1-91e2-a1aac8496373",
+              "arn:aws:codeconnections:ap-southeast-2:116981789059:connection/40bc72e5-4f17-4152-99b1-1b1e86c06876",
           }
         ),
         commands: ["npm ci", "npm run build", "npx cdk synth"],

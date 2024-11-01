@@ -9,7 +9,7 @@ require("dotenv").config();
 
 const config = {
   env: {
-    account: "325861338157",
+    account: "116981789059",
     region: "ap-southeast-2",
   },
 };
@@ -82,7 +82,7 @@ export class WidgetCdkStack extends cdk.Stack {
     sg.addIngressRule(
       ec2.Peer.anyIpv4(),
       ec2.Port.tcp(80),
-      "Allows https access from Internet"
+      "Allows http access from Internet"
     );
 
     // Allows HTTPS connection

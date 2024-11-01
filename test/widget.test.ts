@@ -4,14 +4,12 @@ import * as WidgetCdk from '../lib/widget-app-stack';
 
 test('Template should create widget instance role', () => {
   const app = new cdk.App();
-    // WHEN
   const stack = new WidgetCdk.WidgetCdkStack(app, 'UnitTestStack', {
     env: {
-        account: "325861338157",
+        account: "116981789059",
         region: "ap-southeast-2"
     }
   });
-    // THEN
   const template = Template.fromStack(stack);
 
   template.hasResourceProperties("AWS::IAM::Role", {
@@ -31,14 +29,12 @@ test('Template should create widget instance role', () => {
 
 test('Template Should create security group', () => {
   const app = new cdk.App();
-    // WHEN
   const stack = new WidgetCdk.WidgetCdkStack(app, 'UnitTestStack', {
     env: {
-        account: "325861338157",
+        account: "116981789059",
         region: "ap-southeast-2"
     }
   });
-    // THEN
   const template = Template.fromStack(stack);
 
   template.hasResourceProperties("AWS::EC2::SecurityGroup", {
@@ -61,14 +57,12 @@ test('Template Should create security group', () => {
 
 test('Template Should create EC2 launch templace', () => {
   const app = new cdk.App();
-    // WHEN
   const stack = new WidgetCdk.WidgetCdkStack(app, 'UnitTestStack', {
     env: {
-        account: "325861338157",
+        account: "116981789059",
         region: "ap-southeast-2"
     }
   });
-    // THEN
   const template = Template.fromStack(stack);
 
   template.hasResourceProperties("AWS::EC2::LaunchTemplate", {
@@ -81,14 +75,12 @@ test('Template Should create EC2 launch templace', () => {
 
 test('Template Should create EC2 auto scaling group', () => {
   const app = new cdk.App();
-    // WHEN
   const stack = new WidgetCdk.WidgetCdkStack(app, 'UnitTestStack', {
     env: {
-        account: "325861338157",
+        account: "116981789059",
         region: "ap-southeast-2"
     }
   });
-    // THEN
   const template = Template.fromStack(stack);
 
   template.hasResourceProperties("AWS::AutoScaling::AutoScalingGroup", {
@@ -105,14 +97,12 @@ test('Template Should create EC2 auto scaling group', () => {
 
 test('Template Should create EC2 application load balancer', () => {
   const app = new cdk.App();
-    // WHEN
   const stack = new WidgetCdk.WidgetCdkStack(app, 'UnitTestStack', {
     env: {
-        account: "325861338157",
+        account: "116981789059",
         region: "ap-southeast-2"
     }
   });
-    // THEN
   const template = Template.fromStack(stack);
 
   template.hasResourceProperties("AWS::ElasticLoadBalancingV2::LoadBalancer", {
@@ -123,14 +113,12 @@ test('Template Should create EC2 application load balancer', () => {
 
 test('Template Should create EC2 application load balancer listener', () => {
   const app = new cdk.App();
-    // WHEN
   const stack = new WidgetCdk.WidgetCdkStack(app, 'UnitTestStack', {
     env: {
-        account: "325861338157",
+        account: "116981789059",
         region: "ap-southeast-2"
     }
   });
-    // THEN
   const template = Template.fromStack(stack);
 
   template.hasResourceProperties("AWS::ElasticLoadBalancingV2::Listener", {
@@ -142,14 +130,12 @@ test('Template Should create EC2 application load balancer listener', () => {
 
 test('Template Should define EC2 application load balancer target group', () => {
   const app = new cdk.App();
-    // WHEN
   const stack = new WidgetCdk.WidgetCdkStack(app, 'UnitTestStack', {
     env: {
-        account: "325861338157",
+        account: "116981789059",
         region: "ap-southeast-2"
     }
   });
-    // THEN
   const template = Template.fromStack(stack);
 
   template.hasResourceProperties("AWS::ElasticLoadBalancingV2::TargetGroup", {
