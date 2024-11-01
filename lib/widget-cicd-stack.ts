@@ -48,7 +48,7 @@ export class WidgetCicdStack extends cdk.Stack {
 
     deployStage.addPre(
       new ShellStep("IntegrationTest", {
-        commands: ["npm ci", "npm run integ-test-synth", "npm run integ-test"]
+        commands: ["npm ci", "npm run integ-test"]
       })
     );
   }
