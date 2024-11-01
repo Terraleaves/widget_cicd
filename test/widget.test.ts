@@ -40,7 +40,7 @@ test('Template Should create security group', () => {
   const template = Template.fromStack(stack);
 
   template.hasResourceProperties("AWS::EC2::SecurityGroup", {
-    GroupName: "widget-instance-role",
+    GroupName: "widget-instance-sg",
     SecurityGroupIngress: [
     {
       IpProtocol: "tcp",
