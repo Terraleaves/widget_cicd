@@ -41,6 +41,12 @@ export class WidgetCdkStack extends cdk.Stack {
       defaultVPC,
       securityGroup
     );
+    if (!cdk.Fn.importValue("lbDNS"))
+      new cdk.CfnOutput(this, "LoadBalancerDNS", {
+        value: loadBalancer.loadBalancerDnsName,
+        exportName: "lbDNS",
+      });
+
     // Add Listener to LB (for HTTP on Port 80)
     const listener = this.createApplicationListener(loadBalancer);
 
@@ -54,7 +60,7 @@ export class WidgetCdkStack extends cdk.Stack {
   }
 
   private createRole(): cdk.aws_iam.Role {
-    return new iam.Role(this, "widget-instance-role", {
+    return new iam.Role(this, "widget-instance-sg", {
       assumedBy: new iam.ServicePrincipal("ec2.amazonaws.com"),
     });
   }
@@ -62,11 +68,13 @@ export class WidgetCdkStack extends cdk.Stack {
   private createSecurityGroup(
     vpc: cdk.aws_ec2.IVpc
   ): cdk.aws_ec2.SecurityGroup {
-    return new ec2.SecurityGroup(this, "widget-instance-sg", {
-      vpc: vpc,
-      allowAllOutbound: true,
-      securityGroupName: "widget-instance-role",
-    });
+    const existingSg = ec2.SecurityGroup.fromLookupByName(this, "existing-widget-instance-sg", "widget-instance-sg", vpc) as cdk.aws_ec2.SecurityGroup;
+    return existingSg ?? new ec2.SecurityGroup(this, "widget-instance-sg", {
+        vpc: vpc,
+        allowAllOutbound: true,
+        securityGroupName: "widget-instance-sg",
+      });
+
   }
 
   private defineSGIngressRule(sg: cdk.aws_ec2.SecurityGroup): void {
