@@ -13,7 +13,6 @@ const config = {
 };
 
 export class WidgetCdkStack extends cdk.Stack {
-  public readonly cfnOutputValue: cdk.CfnOutput;
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, { ...props, env: config.env });
 
@@ -42,11 +41,6 @@ export class WidgetCdkStack extends cdk.Stack {
       defaultVPC,
       securityGroup
     );
-    this.cfnOutputValue = new cdk.CfnOutput(this, "LoadBalancerDNS", {
-      value: loadBalancer.loadBalancerDnsName,
-      exportName: "lbDNS",
-    });
-
     // Add Listener to LB (for HTTP on Port 80)
     const listener = this.createApplicationListener(loadBalancer);
 
