@@ -5,8 +5,6 @@ import * as iam from "aws-cdk-lib/aws-iam";
 import * as autoscaling from "aws-cdk-lib/aws-autoscaling";
 import * as elbv2 from "aws-cdk-lib/aws-elasticloadbalancingv2";
 
-require("dotenv").config();
-
 const config = {
   env: {
     account: "116981789059",

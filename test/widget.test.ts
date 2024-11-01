@@ -2,13 +2,15 @@ import * as cdk from 'aws-cdk-lib';
 import { Template } from 'aws-cdk-lib/assertions';
 import * as WidgetCdk from '../lib/widget-app-stack';
 
+require("dotenv").config();
+
 test('Template should create widget instance role', () => {
   const app = new cdk.App();
   const stack = new WidgetCdk.WidgetCdkStack(app, 'UnitTestStack', {
     env: {
-        account: "116981789059",
-        region: "ap-southeast-2"
-    }
+          account: process.env.CDK_DEFAULT_ACCOUNT,
+          region: process.env.CDK_DEFAULT_REGION,
+        },
   });
   const template = Template.fromStack(stack);
 
@@ -31,9 +33,9 @@ test('Template Should create security group', () => {
   const app = new cdk.App();
   const stack = new WidgetCdk.WidgetCdkStack(app, 'UnitTestStack', {
     env: {
-        account: "116981789059",
-        region: "ap-southeast-2"
-    }
+          account: process.env.CDK_DEFAULT_ACCOUNT,
+          region: process.env.CDK_DEFAULT_REGION,
+        },
   });
   const template = Template.fromStack(stack);
 
@@ -59,9 +61,9 @@ test('Template Should create EC2 launch templace', () => {
   const app = new cdk.App();
   const stack = new WidgetCdk.WidgetCdkStack(app, 'UnitTestStack', {
     env: {
-        account: "116981789059",
-        region: "ap-southeast-2"
-    }
+          account: process.env.CDK_DEFAULT_ACCOUNT,
+          region: process.env.CDK_DEFAULT_REGION,
+        },
   });
   const template = Template.fromStack(stack);
 
@@ -77,9 +79,9 @@ test('Template Should create EC2 auto scaling group', () => {
   const app = new cdk.App();
   const stack = new WidgetCdk.WidgetCdkStack(app, 'UnitTestStack', {
     env: {
-        account: "116981789059",
-        region: "ap-southeast-2"
-    }
+          account: process.env.CDK_DEFAULT_ACCOUNT,
+          region: process.env.CDK_DEFAULT_REGION,
+        },
   });
   const template = Template.fromStack(stack);
 
@@ -99,9 +101,9 @@ test('Template Should create EC2 application load balancer', () => {
   const app = new cdk.App();
   const stack = new WidgetCdk.WidgetCdkStack(app, 'UnitTestStack', {
     env: {
-        account: "116981789059",
-        region: "ap-southeast-2"
-    }
+          account: process.env.CDK_DEFAULT_ACCOUNT,
+          region: process.env.CDK_DEFAULT_REGION,
+        },
   });
   const template = Template.fromStack(stack);
 
@@ -115,9 +117,9 @@ test('Template Should create EC2 application load balancer listener', () => {
   const app = new cdk.App();
   const stack = new WidgetCdk.WidgetCdkStack(app, 'UnitTestStack', {
     env: {
-        account: "116981789059",
-        region: "ap-southeast-2"
-    }
+          account: process.env.CDK_DEFAULT_ACCOUNT,
+          region: process.env.CDK_DEFAULT_REGION,
+        },
   });
   const template = Template.fromStack(stack);
 
@@ -132,9 +134,9 @@ test('Template Should define EC2 application load balancer target group', () => 
   const app = new cdk.App();
   const stack = new WidgetCdk.WidgetCdkStack(app, 'UnitTestStack', {
     env: {
-        account: "116981789059",
-        region: "ap-southeast-2"
-    }
+          account: process.env.CDK_DEFAULT_ACCOUNT,
+          region: process.env.CDK_DEFAULT_REGION,
+        },
   });
   const template = Template.fromStack(stack);
 
