@@ -14,7 +14,14 @@ export class WidgetCicdStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
-    const pipeline = new CodePipeline(this, "Pipeline", {
+    const pipeline = this.createPipeline();
+
+    this.createTestStage(pipeline);
+    this.createDeployStage(pipeline);
+  }
+
+  private createPipeline(): cdk.pipelines.CodePipeline {
+    return new CodePipeline(this, "Pipeline", {
       pipelineName: "WidgetPipeline",
       synth: new ShellStep("Synth", {
         input: CodePipelineSource.connection(
@@ -30,32 +37,25 @@ export class WidgetCicdStack extends cdk.Stack {
         primaryOutputDirectory: "cdk.out",
       }),
     });
+  }
 
-    const deployStage = pipeline.addStage(
-      new ProductionDeployStage(this, "Deploy", {
-        env: {
-          account: process.env.CDK_DEFAULT_ACCOUNT,
-          region: process.env.CDK_DEFAULT_REGION,
-        },
-      })
-    );
-
-    const testRole = new iam.Role(this, "IntegrationTestRole", {
-      assumedBy: new iam.CompositePrincipal(
-        new iam.ServicePrincipal("codebuild.amazonaws.com"),
-        new iam.ServicePrincipal("cloudformation.amazonaws.com"),
-      ),
+  private createTestStage(pipeline: cdk.pipelines.CodePipeline): void {
+    const testStage = new cdk.Stage(this, "Test", {
+      stageName: "TestStage",
     });
 
-    testRole.addManagedPolicy(
-      iam.ManagedPolicy.fromAwsManagedPolicyName("AdministratorAccess")
-    );
+    const pipelineTestStage = pipeline.addStage(testStage);
 
+    // Create test role
+    const testRole = this.createTestRole();
+
+    // Create unit tes step
     const unitTestStep = new cdk.pipelines.CodeBuildStep("UnitTest", {
       role: testRole,
       commands: ["npm ci", "npm test"],
     });
 
+    // Create integration test step
     const integrationTestStep = new cdk.pipelines.CodeBuildStep(
       "IntegrationTest",
       {
@@ -64,8 +64,34 @@ export class WidgetCicdStack extends cdk.Stack {
       }
     );
 
-    deployStage.addPre(unitTestStep);
+    // Add steps into test stage
+    pipelineTestStage.addPre(unitTestStep);
+    pipelineTestStage.addPost(integrationTestStep);
+  }
 
-    deployStage.addPre(integrationTestStep);
+  private createDeployStage(pipeline: cdk.pipelines.CodePipeline) {
+    pipeline.addStage(
+      new ProductionDeployStage(this, "Deploy", {
+        env: {
+          account: process.env.CDK_DEFAULT_ACCOUNT,
+          region: process.env.CDK_DEFAULT_REGION,
+        },
+      })
+    );
+  }
+
+  private createTestRole(): cdk.aws_iam.Role {
+    const testRole = new iam.Role(this, "PipelineTestRole", {
+      assumedBy: new iam.CompositePrincipal(
+        new iam.ServicePrincipal("codebuild.amazonaws.com"),
+        new iam.ServicePrincipal("cloudformation.amazonaws.com")
+      ),
+    });
+
+    testRole.addManagedPolicy(
+      iam.ManagedPolicy.fromAwsManagedPolicyName("AdministratorAccess")
+    );
+
+    return testRole;
   }
 }
