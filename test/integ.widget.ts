@@ -20,7 +20,7 @@ const integ = new IntegTest(app, "Resource creation", {
   regions: [testStack.region],
 });
 
-const dns = cdk.Fn.importValue("lbDNS");
+const dns = testStack.lbDnsName;
 
 integ.assertions
   .httpApiCall(`http://${dns}`)
