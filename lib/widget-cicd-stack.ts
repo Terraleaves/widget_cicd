@@ -63,7 +63,7 @@ export class WidgetCicdStack extends cdk.Stack {
 
     // Add steps into test stage
    deployStage.addPre(unitTestStep);
-   deployStage.addPost(integrationTestStep);
+   deployStage.addPre(integrationTestStep);
   }
 
   private createTestRole(): cdk.aws_iam.Role {
