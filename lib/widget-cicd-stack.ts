@@ -17,13 +17,9 @@ export class WidgetCicdStack extends cdk.Stack {
     // Create pipeline
     const pipeline = this.createPipeline();
 
-    // Create test stage
-    this.createTestStage(pipeline);
-
     // Create deploy stage
     this.createDeployStage(pipeline);
   }
-
   private createPipeline(): cdk.pipelines.CodePipeline {
     return new CodePipeline(this, "Pipeline", {
       pipelineName: "WidgetPipeline",
@@ -43,15 +39,10 @@ export class WidgetCicdStack extends cdk.Stack {
     });
   }
 
-  private createTestStage(pipeline: cdk.pipelines.CodePipeline): void {
-    // Create cdk stage
-    const testStage = new cdk.Stage(this, "Test", {
-      stageName: "Test"
-    });
-
-    // Create pipeline stage using cdk stage
-    const pipelineTestStage = pipeline.addStage(testStage);
-
+  private createDeployStage(pipeline: cdk.pipelines.CodePipeline) {
+    const deployStage = pipeline.addStage(
+      new ProductionDeployStage(this, "Deploy")
+    );
     // Create test role
     const testRole = this.createTestRole();
 
@@ -71,14 +62,8 @@ export class WidgetCicdStack extends cdk.Stack {
     );
 
     // Add steps into test stage
-    pipelineTestStage.addPre(unitTestStep);
-    pipelineTestStage.addPost(integrationTestStep);
-  }
-
-  private createDeployStage(pipeline: cdk.pipelines.CodePipeline) {
-    pipeline.addStage(
-      new ProductionDeployStage(this, "Deploy")
-    );
+   deployStage.addPre(unitTestStep);
+   deployStage.addPost(integrationTestStep);
   }
 
   private createTestRole(): cdk.aws_iam.Role {
