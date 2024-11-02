@@ -6,12 +6,17 @@ import {
   ShellStep,
 } from "aws-cdk-lib/pipelines";
 import { ProductionDeployStage } from "./production-deploy-stage";
+import * as iam from "aws-cdk-lib/aws-iam";
 
 require("dotenv").config();
 
 export class WidgetCicdStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
+
+    const role = new iam.Role(this, "widget-instance-role", {
+      assumedBy: new iam.ServicePrincipal("ec2.amazonaws.com"),
+    });
 
     const pipeline = new CodePipeline(this, "Pipeline", {
       pipelineName: "WidgetPipeline",
@@ -30,7 +35,6 @@ export class WidgetCicdStack extends cdk.Stack {
       }),
     });
 
-
     const deployStage = pipeline.addStage(
       new ProductionDeployStage(this, "Deploy", {
         env: {
@@ -40,16 +44,32 @@ export class WidgetCicdStack extends cdk.Stack {
       })
     );
 
-    deployStage.addPre(
-      new ShellStep("UnitTest", {
-        commands: ["npm ci", "npm test"]
-      })
+    const testRole = new iam.Role(this, "IntegrationTestRole", {
+      assumedBy: new iam.CompositePrincipal(
+        new iam.ServicePrincipal("codebuild.amazonaws.com"),
+        new iam.ServicePrincipal("cloudformation.amazonaws.com"),
+      ),
+    });
+
+    testRole.addManagedPolicy(
+      iam.ManagedPolicy.fromAwsManagedPolicyName("AdministratorAccess")
     );
 
-    deployStage.addPre(
-      new ShellStep("IntegrationTest", {
-        commands: ["npm ci", "npm run integ-test"]
-      })
+    const unitTestStep = new cdk.pipelines.CodeBuildStep("UnitTest", {
+      role: testRole,
+      commands: ["npm ci", "npm test"],
+    });
+
+    const integrationTestStep = new cdk.pipelines.CodeBuildStep(
+      "IntegrationTest",
+      {
+        role: testRole,
+        commands: ["npm ci", "npm run integ-test"],
+      }
     );
+
+    deployStage.addPre(unitTestStep);
+
+    deployStage.addPre(integrationTestStep);
   }
 }
