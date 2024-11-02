@@ -1,0 +1,157 @@
+import * as cdk from "aws-cdk-lib";
+import { Construct } from "constructs";
+import * as ec2 from "aws-cdk-lib/aws-ec2";
+import * as iam from "aws-cdk-lib/aws-iam";
+import * as autoscaling from "aws-cdk-lib/aws-autoscaling";
+import * as elbv2 from "aws-cdk-lib/aws-elasticloadbalancingv2";
+
+const config = {
+  env: {
+    account: "116981789059",
+    region: "ap-southeast-2",
+  },
+};
+
+export class IntegrationTestStack extends cdk.Stack {
+  constructor(scope: Construct, id: string, props?: cdk.StackProps) {
+    super(scope, id, { ...props, env: config.env });
+
+    // Find default VPC for now
+    const defaultVPC = this.getDefaultVPC();
+
+    // Configure role
+    const role = this.createRole();
+
+    // Configure security group
+    const securityGroup = this.createSecurityGroup(defaultVPC);
+
+    // Add rule to security group
+    this.defineSGIngressRule(securityGroup);
+
+    const launchTemplate = this.createLaunchTemplate(role, securityGroup);
+
+    // Create auto scaling group
+    const autoScalingGroup = this.createAutoScallingGroup(
+      defaultVPC,
+      launchTemplate
+    );
+
+    // Create Load Balancer
+    const loadBalancer = this.createApplicationLoadBalancer(
+      defaultVPC,
+      securityGroup
+    );
+
+    new cdk.CfnOutput(this, "LoadBalancerDNS", {
+      value: loadBalancer.loadBalancerDnsName,
+      exportName: "test-lbDNS",
+    });
+
+    // Add Listener to LB (for HTTP on Port 80)
+    const listener = this.createApplicationListener(loadBalancer);
+
+    // Add Target Group to LB
+    this.defineTarget(listener, autoScalingGroup);
+
+  }
+
+  private getDefaultVPC(): cdk.aws_ec2.IVpc {
+    return ec2.Vpc.fromLookup(this, "VPC", { isDefault: true });
+  }
+
+  private createRole(): cdk.aws_iam.Role {
+    return new iam.Role(this, "widget-instance-test-role", {
+      assumedBy: new iam.ServicePrincipal("ec2.amazonaws.com"),
+    });
+  }
+
+  private createSecurityGroup(
+    vpc: cdk.aws_ec2.IVpc
+  ): cdk.aws_ec2.SecurityGroup {
+    return new ec2.SecurityGroup(this, "widget-instance-test-sg", {
+      vpc: vpc,
+      allowAllOutbound: true,
+      securityGroupName: "widget-instance-test-sg",
+    });
+  }
+
+  private defineSGIngressRule(sg: cdk.aws_ec2.SecurityGroup): void {
+    // Allow HTTP connection
+    sg.addIngressRule(
+      ec2.Peer.anyIpv4(),
+      ec2.Port.tcp(80),
+      "Allows http access from Internet for test"
+    );
+
+    // Allows HTTPS connection
+    sg.addIngressRule(
+      ec2.Peer.anyIpv4(),
+      ec2.Port.tcp(443),
+      "Allows https access from Internet for test"
+    );
+  }
+
+  private createLaunchTemplate(
+    role: cdk.aws_iam.Role,
+    sg: cdk.aws_ec2.SecurityGroup
+  ): cdk.aws_ec2.LaunchTemplate {
+    return new ec2.LaunchTemplate(this, "widget-instance", {
+      role: role,
+      securityGroup: sg,
+      instanceType: ec2.InstanceType.of(
+        ec2.InstanceClass.T2,
+        ec2.InstanceSize.MICRO
+      ),
+      machineImage: ec2.MachineImage.lookup({
+        name: "widget-instance-ami",
+      }),
+    });
+  }
+
+  private createAutoScallingGroup(
+    vpc: cdk.aws_ec2.IVpc,
+    launchTemplate: cdk.aws_ec2.LaunchTemplate
+  ): cdk.aws_autoscaling.AutoScalingGroup {
+    return new autoscaling.AutoScalingGroup(this, "AutoScalingGroup-test", {
+      vpc: vpc,
+      launchTemplate: launchTemplate,
+      minCapacity: 1,
+      desiredCapacity: 1,
+      maxCapacity: 3,
+    });
+  }
+
+  private createApplicationLoadBalancer(
+    vpc: cdk.aws_ec2.IVpc,
+    sg: cdk.aws_ec2.SecurityGroup
+  ): cdk.aws_elasticloadbalancingv2.ApplicationLoadBalancer {
+    return new elbv2.ApplicationLoadBalancer(this, "LB-test", {
+      vpc: vpc,
+      internetFacing: true,
+      securityGroup: sg,
+    });
+  }
+
+  private createApplicationListener(
+    lb: cdk.aws_elasticloadbalancingv2.ApplicationLoadBalancer
+  ): cdk.aws_elasticloadbalancingv2.ApplicationListener {
+    return lb.addListener("Listener-test", {
+      port: 80,
+      open: true,
+    });
+  }
+
+  private defineTarget(
+    listener: cdk.aws_elasticloadbalancingv2.ApplicationListener,
+    asg: cdk.aws_autoscaling.AutoScalingGroup
+  ) {
+    listener.addTargets("Target-test", {
+      port: 80,
+      targets: [asg],
+      healthCheck: {
+        path: "/",
+        interval: cdk.Duration.seconds(30),
+      },
+    });
+  }
+}

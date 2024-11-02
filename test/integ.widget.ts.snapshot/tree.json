@@ -1,0 +1,617 @@
+{
+  "version": "tree-0.1",
+  "tree": {
+    "id": "App",
+    "path": "",
+    "children": {
+      "IntegrationTestStack": {
+        "id": "IntegrationTestStack",
+        "path": "IntegrationTestStack",
+        "children": {
+          "VPC": {
+            "id": "VPC",
+            "path": "IntegrationTestStack/VPC",
+            "children": {
+              "PublicSubnet1": {
+                "id": "PublicSubnet1",
+                "path": "IntegrationTestStack/VPC/PublicSubnet1",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.Resource",
+                  "version": "2.164.1"
+                }
+              },
+              "PublicSubnet2": {
+                "id": "PublicSubnet2",
+                "path": "IntegrationTestStack/VPC/PublicSubnet2",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.Resource",
+                  "version": "2.164.1"
+                }
+              },
+              "PublicSubnet3": {
+                "id": "PublicSubnet3",
+                "path": "IntegrationTestStack/VPC/PublicSubnet3",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.Resource",
+                  "version": "2.164.1"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.Resource",
+              "version": "2.164.1"
+            }
+          },
+          "widget-instance-test-role": {
+            "id": "widget-instance-test-role",
+            "path": "IntegrationTestStack/widget-instance-test-role",
+            "children": {
+              "Importwidget-instance-test-role": {
+                "id": "Importwidget-instance-test-role",
+                "path": "IntegrationTestStack/widget-instance-test-role/Importwidget-instance-test-role",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.Resource",
+                  "version": "2.164.1"
+                }
+              },
+              "Resource": {
+                "id": "Resource",
+                "path": "IntegrationTestStack/widget-instance-test-role/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::IAM::Role",
+                  "aws:cdk:cloudformation:props": {
+                    "assumeRolePolicyDocument": {
+                      "Statement": [
+                        {
+                          "Action": "sts:AssumeRole",
+                          "Effect": "Allow",
+                          "Principal": {
+                            "Service": "ec2.amazonaws.com"
+                          }
+                        }
+                      ],
+                      "Version": "2012-10-17"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_iam.CfnRole",
+                  "version": "2.164.1"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_iam.Role",
+              "version": "2.164.1"
+            }
+          },
+          "widget-instance-test-sg": {
+            "id": "widget-instance-test-sg",
+            "path": "IntegrationTestStack/widget-instance-test-sg",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "IntegrationTestStack/widget-instance-test-sg/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::EC2::SecurityGroup",
+                  "aws:cdk:cloudformation:props": {
+                    "groupDescription": "IntegrationTestStack/widget-instance-test-sg",
+                    "groupName": "widget-instance-test-sg",
+                    "securityGroupEgress": [
+                      {
+                        "cidrIp": "0.0.0.0/0",
+                        "description": "Allow all outbound traffic by default",
+                        "ipProtocol": "-1"
+                      }
+                    ],
+                    "securityGroupIngress": [
+                      {
+                        "cidrIp": "0.0.0.0/0",
+                        "ipProtocol": "tcp",
+                        "fromPort": 80,
+                        "toPort": 80,
+                        "description": "Allows http access from Internet for test"
+                      },
+                      {
+                        "cidrIp": "0.0.0.0/0",
+                        "ipProtocol": "tcp",
+                        "fromPort": 443,
+                        "toPort": 443,
+                        "description": "Allows https access from Internet for test"
+                      }
+                    ],
+                    "vpcId": "vpc-0f2460f3c993b83dd"
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_ec2.CfnSecurityGroup",
+                  "version": "2.164.1"
+                }
+              },
+              "from IntegrationTestStackwidgetinstancetestsg58BEC4A7:80": {
+                "id": "from IntegrationTestStackwidgetinstancetestsg58BEC4A7:80",
+                "path": "IntegrationTestStack/widget-instance-test-sg/from IntegrationTestStackwidgetinstancetestsg58BEC4A7:80",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::EC2::SecurityGroupIngress",
+                  "aws:cdk:cloudformation:props": {
+                    "description": "Load balancer to target",
+                    "fromPort": 80,
+                    "groupId": {
+                      "Fn::GetAtt": [
+                        "widgetinstancetestsg4F6F93EE",
+                        "GroupId"
+                      ]
+                    },
+                    "ipProtocol": "tcp",
+                    "sourceSecurityGroupId": {
+                      "Fn::GetAtt": [
+                        "widgetinstancetestsg4F6F93EE",
+                        "GroupId"
+                      ]
+                    },
+                    "toPort": 80
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_ec2.CfnSecurityGroupIngress",
+                  "version": "2.164.1"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_ec2.SecurityGroup",
+              "version": "2.164.1"
+            }
+          },
+          "widget-instance": {
+            "id": "widget-instance",
+            "path": "IntegrationTestStack/widget-instance",
+            "children": {
+              "Profile": {
+                "id": "Profile",
+                "path": "IntegrationTestStack/widget-instance/Profile",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::IAM::InstanceProfile",
+                  "aws:cdk:cloudformation:props": {
+                    "roles": [
+                      {
+                        "Ref": "widgetinstancetestrole2EEC24E9"
+                      }
+                    ]
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_iam.CfnInstanceProfile",
+                  "version": "2.164.1"
+                }
+              },
+              "Resource": {
+                "id": "Resource",
+                "path": "IntegrationTestStack/widget-instance/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::EC2::LaunchTemplate",
+                  "aws:cdk:cloudformation:props": {
+                    "launchTemplateData": {
+                      "iamInstanceProfile": {
+                        "arn": {
+                          "Fn::GetAtt": [
+                            "widgetinstanceProfile6B57AC5F",
+                            "Arn"
+                          ]
+                        }
+                      },
+                      "imageId": "ami-08eb7eb144d8f1780",
+                      "instanceType": "t2.micro",
+                      "securityGroupIds": [
+                        {
+                          "Fn::GetAtt": [
+                            "widgetinstancetestsg4F6F93EE",
+                            "GroupId"
+                          ]
+                        }
+                      ],
+                      "tagSpecifications": [
+                        {
+                          "resourceType": "instance",
+                          "tags": [
+                            {
+                              "key": "Name",
+                              "value": "IntegrationTestStack/widget-instance"
+                            }
+                          ]
+                        },
+                        {
+                          "resourceType": "volume",
+                          "tags": [
+                            {
+                              "key": "Name",
+                              "value": "IntegrationTestStack/widget-instance"
+                            }
+                          ]
+                        }
+                      ],
+                      "userData": {
+                        "Fn::Base64": "#!/bin/bash"
+                      }
+                    },
+                    "tagSpecifications": [
+                      {
+                        "resourceType": "launch-template",
+                        "tags": [
+                          {
+                            "key": "Name",
+                            "value": "IntegrationTestStack/widget-instance"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_ec2.CfnLaunchTemplate",
+                  "version": "2.164.1"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_ec2.LaunchTemplate",
+              "version": "2.164.1"
+            }
+          },
+          "AutoScalingGroup-test": {
+            "id": "AutoScalingGroup-test",
+            "path": "IntegrationTestStack/AutoScalingGroup-test",
+            "children": {
+              "ASG": {
+                "id": "ASG",
+                "path": "IntegrationTestStack/AutoScalingGroup-test/ASG",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::AutoScaling::AutoScalingGroup",
+                  "aws:cdk:cloudformation:props": {
+                    "desiredCapacity": "1",
+                    "launchTemplate": {
+                      "launchTemplateId": {
+                        "Ref": "widgetinstance52A2D3A4"
+                      },
+                      "version": {
+                        "Fn::GetAtt": [
+                          "widgetinstance52A2D3A4",
+                          "LatestVersionNumber"
+                        ]
+                      }
+                    },
+                    "maxSize": "3",
+                    "minSize": "1",
+                    "targetGroupArns": [
+                      {
+                        "Ref": "LBtestListenertestTargettestGroup96B54E77"
+                      }
+                    ],
+                    "vpcZoneIdentifier": [
+                      "subnet-00a04d400b29f7da5",
+                      "subnet-042f026b16b68fc35",
+                      "subnet-0e00c0a54bcdfc906"
+                    ]
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_autoscaling.CfnAutoScalingGroup",
+                  "version": "2.164.1"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_autoscaling.AutoScalingGroup",
+              "version": "2.164.1"
+            }
+          },
+          "LB-test": {
+            "id": "LB-test",
+            "path": "IntegrationTestStack/LB-test",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "IntegrationTestStack/LB-test/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::ElasticLoadBalancingV2::LoadBalancer",
+                  "aws:cdk:cloudformation:props": {
+                    "loadBalancerAttributes": [
+                      {
+                        "key": "deletion_protection.enabled",
+                        "value": "false"
+                      }
+                    ],
+                    "scheme": "internet-facing",
+                    "securityGroups": [
+                      {
+                        "Fn::GetAtt": [
+                          "widgetinstancetestsg4F6F93EE",
+                          "GroupId"
+                        ]
+                      }
+                    ],
+                    "subnets": [
+                      "subnet-00a04d400b29f7da5",
+                      "subnet-042f026b16b68fc35",
+                      "subnet-0e00c0a54bcdfc906"
+                    ],
+                    "type": "application"
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_elasticloadbalancingv2.CfnLoadBalancer",
+                  "version": "2.164.1"
+                }
+              },
+              "Listener-test": {
+                "id": "Listener-test",
+                "path": "IntegrationTestStack/LB-test/Listener-test",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "IntegrationTestStack/LB-test/Listener-test/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::ElasticLoadBalancingV2::Listener",
+                      "aws:cdk:cloudformation:props": {
+                        "defaultActions": [
+                          {
+                            "type": "forward",
+                            "targetGroupArn": {
+                              "Ref": "LBtestListenertestTargettestGroup96B54E77"
+                            }
+                          }
+                        ],
+                        "loadBalancerArn": {
+                          "Ref": "LBtestD8BBA2D8"
+                        },
+                        "port": 80,
+                        "protocol": "HTTP"
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_elasticloadbalancingv2.CfnListener",
+                      "version": "2.164.1"
+                    }
+                  },
+                  "Target-testGroup": {
+                    "id": "Target-testGroup",
+                    "path": "IntegrationTestStack/LB-test/Listener-test/Target-testGroup",
+                    "children": {
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "IntegrationTestStack/LB-test/Listener-test/Target-testGroup/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::ElasticLoadBalancingV2::TargetGroup",
+                          "aws:cdk:cloudformation:props": {
+                            "healthCheckIntervalSeconds": 30,
+                            "healthCheckPath": "/",
+                            "port": 80,
+                            "protocol": "HTTP",
+                            "targetGroupAttributes": [
+                              {
+                                "key": "stickiness.enabled",
+                                "value": "false"
+                              }
+                            ],
+                            "targetType": "instance",
+                            "vpcId": "vpc-0f2460f3c993b83dd"
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_elasticloadbalancingv2.CfnTargetGroup",
+                          "version": "2.164.1"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_elasticloadbalancingv2.ApplicationTargetGroup",
+                      "version": "2.164.1"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_elasticloadbalancingv2.ApplicationListener",
+                  "version": "2.164.1"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_elasticloadbalancingv2.ApplicationLoadBalancer",
+              "version": "2.164.1"
+            }
+          },
+          "LoadBalancerDNS": {
+            "id": "LoadBalancerDNS",
+            "path": "IntegrationTestStack/LoadBalancerDNS",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CfnOutput",
+              "version": "2.164.1"
+            }
+          },
+          "BootstrapVersion": {
+            "id": "BootstrapVersion",
+            "path": "IntegrationTestStack/BootstrapVersion",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CfnParameter",
+              "version": "2.164.1"
+            }
+          },
+          "CheckBootstrapVersion": {
+            "id": "CheckBootstrapVersion",
+            "path": "IntegrationTestStack/CheckBootstrapVersion",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CfnRule",
+              "version": "2.164.1"
+            }
+          }
+        },
+        "constructInfo": {
+          "fqn": "aws-cdk-lib.Stack",
+          "version": "2.164.1"
+        }
+      },
+      "Resource creation": {
+        "id": "Resource creation",
+        "path": "Resource creation",
+        "children": {
+          "DefaultTest": {
+            "id": "DefaultTest",
+            "path": "Resource creation/DefaultTest",
+            "children": {
+              "Default": {
+                "id": "Default",
+                "path": "Resource creation/DefaultTest/Default",
+                "constructInfo": {
+                  "fqn": "constructs.Construct",
+                  "version": "10.4.2"
+                }
+              },
+              "DeployAssert": {
+                "id": "DeployAssert",
+                "path": "Resource creation/DefaultTest/DeployAssert",
+                "children": {
+                  "HttpApiCall876c53c97f414a60e6440adc95aaa241": {
+                    "id": "HttpApiCall876c53c97f414a60e6440adc95aaa241",
+                    "path": "Resource creation/DefaultTest/DeployAssert/HttpApiCall876c53c97f414a60e6440adc95aaa241",
+                    "children": {
+                      "HttpProvider": {
+                        "id": "HttpProvider",
+                        "path": "Resource creation/DefaultTest/DeployAssert/HttpApiCall876c53c97f414a60e6440adc95aaa241/HttpProvider",
+                        "children": {
+                          "AssertionsProvider": {
+                            "id": "AssertionsProvider",
+                            "path": "Resource creation/DefaultTest/DeployAssert/HttpApiCall876c53c97f414a60e6440adc95aaa241/HttpProvider/AssertionsProvider",
+                            "constructInfo": {
+                              "fqn": "constructs.Construct",
+                              "version": "10.4.2"
+                            }
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "@aws-cdk/integ-tests-alpha.AssertionsProvider",
+                          "version": "2.164.1-alpha.0"
+                        }
+                      },
+                      "Default": {
+                        "id": "Default",
+                        "path": "Resource creation/DefaultTest/DeployAssert/HttpApiCall876c53c97f414a60e6440adc95aaa241/Default",
+                        "children": {
+                          "Default": {
+                            "id": "Default",
+                            "path": "Resource creation/DefaultTest/DeployAssert/HttpApiCall876c53c97f414a60e6440adc95aaa241/Default/Default",
+                            "constructInfo": {
+                              "fqn": "aws-cdk-lib.CfnResource",
+                              "version": "2.164.1"
+                            }
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.CustomResource",
+                          "version": "2.164.1"
+                        }
+                      },
+                      "AssertionResults": {
+                        "id": "AssertionResults",
+                        "path": "Resource creation/DefaultTest/DeployAssert/HttpApiCall876c53c97f414a60e6440adc95aaa241/AssertionResults",
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.CfnOutput",
+                          "version": "2.164.1"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "@aws-cdk/integ-tests-alpha.HttpApiCall",
+                      "version": "2.164.1-alpha.0"
+                    }
+                  },
+                  "SingletonFunction1488541a7b23466481b69b4408076b81": {
+                    "id": "SingletonFunction1488541a7b23466481b69b4408076b81",
+                    "path": "Resource creation/DefaultTest/DeployAssert/SingletonFunction1488541a7b23466481b69b4408076b81",
+                    "children": {
+                      "Staging": {
+                        "id": "Staging",
+                        "path": "Resource creation/DefaultTest/DeployAssert/SingletonFunction1488541a7b23466481b69b4408076b81/Staging",
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.AssetStaging",
+                          "version": "2.164.1"
+                        }
+                      },
+                      "Role": {
+                        "id": "Role",
+                        "path": "Resource creation/DefaultTest/DeployAssert/SingletonFunction1488541a7b23466481b69b4408076b81/Role",
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.CfnResource",
+                          "version": "2.164.1"
+                        }
+                      },
+                      "Handler": {
+                        "id": "Handler",
+                        "path": "Resource creation/DefaultTest/DeployAssert/SingletonFunction1488541a7b23466481b69b4408076b81/Handler",
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.CfnResource",
+                          "version": "2.164.1"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "constructs.Construct",
+                      "version": "10.4.2"
+                    }
+                  },
+                  "LatestNodeRuntimeMap": {
+                    "id": "LatestNodeRuntimeMap",
+                    "path": "Resource creation/DefaultTest/DeployAssert/LatestNodeRuntimeMap",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.CfnMapping",
+                      "version": "2.164.1"
+                    }
+                  },
+                  "BootstrapVersion": {
+                    "id": "BootstrapVersion",
+                    "path": "Resource creation/DefaultTest/DeployAssert/BootstrapVersion",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.CfnParameter",
+                      "version": "2.164.1"
+                    }
+                  },
+                  "CheckBootstrapVersion": {
+                    "id": "CheckBootstrapVersion",
+                    "path": "Resource creation/DefaultTest/DeployAssert/CheckBootstrapVersion",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.CfnRule",
+                      "version": "2.164.1"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.Stack",
+                  "version": "2.164.1"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "@aws-cdk/integ-tests-alpha.IntegTestCase",
+              "version": "2.164.1-alpha.0"
+            }
+          }
+        },
+        "constructInfo": {
+          "fqn": "@aws-cdk/integ-tests-alpha.IntegTest",
+          "version": "2.164.1-alpha.0"
+        }
+      },
+      "Tree": {
+        "id": "Tree",
+        "path": "Tree",
+        "constructInfo": {
+          "fqn": "constructs.Construct",
+          "version": "10.4.2"
+        }
+      }
+    },
+    "constructInfo": {
+      "fqn": "aws-cdk-lib.App",
+      "version": "2.164.1"
+    }
+  }
+}
