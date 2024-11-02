@@ -14,10 +14,6 @@ export class WidgetCicdStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
-    const role = new iam.Role(this, "widget-instance-role", {
-      assumedBy: new iam.ServicePrincipal("ec2.amazonaws.com"),
-    });
-
     const pipeline = new CodePipeline(this, "Pipeline", {
       pipelineName: "WidgetPipeline",
       synth: new ShellStep("Synth", {

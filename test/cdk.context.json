@@ -1,37 +1,4 @@
 {
-  "vpc-provider:account=325861338157:filter.isDefault=true:region=ap-southeast-2:returnAsymmetricSubnets=true": {
-    "vpcId": "vpc-04858c47ad898a970",
-    "vpcCidrBlock": "172.31.0.0/16",
-    "ownerAccountId": "325861338157",
-    "availabilityZones": [],
-    "subnetGroups": [
-      {
-        "name": "Public",
-        "type": "Public",
-        "subnets": [
-          {
-            "subnetId": "subnet-0e9f6aafc5643d710",
-            "cidr": "172.31.0.0/20",
-            "availabilityZone": "ap-southeast-2a",
-            "routeTableId": "rtb-0a63073a2f13edfbe"
-          },
-          {
-            "subnetId": "subnet-0bc37d6ce302d35d0",
-            "cidr": "172.31.32.0/20",
-            "availabilityZone": "ap-southeast-2b",
-            "routeTableId": "rtb-0a63073a2f13edfbe"
-          },
-          {
-            "subnetId": "subnet-09aaad4ae1e2746b7",
-            "cidr": "172.31.16.0/20",
-            "availabilityZone": "ap-southeast-2c",
-            "routeTableId": "rtb-0a63073a2f13edfbe"
-          }
-        ]
-      }
-    ]
-  },
-  "ami:account=325861338157:filters.image-type.0=machine:filters.name.0=widget-instance-ami:filters.state.0=available:region=ap-southeast-2": "ami-08eb7eb144d8f1780",
   "vpc-provider:account=116981789059:filter.isDefault=true:region=ap-southeast-2:returnAsymmetricSubnets=true": {
     "vpcId": "vpc-0f2460f3c993b83dd",
     "vpcCidrBlock": "172.31.0.0/16",
