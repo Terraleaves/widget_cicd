@@ -41,7 +41,7 @@ export class WidgetCdkStack extends cdk.Stack {
       defaultVPC,
       securityGroup
     );
-    if (!cdk.Fn.importValue("lbDNS"))
+    if (cdk.Fn.importValue("lbDNS").length === 0)
       new cdk.CfnOutput(this, "LoadBalancerDNS", {
         value: loadBalancer.loadBalancerDnsName,
         exportName: "lbDNS",
