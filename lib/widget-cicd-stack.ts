@@ -14,9 +14,13 @@ export class WidgetCicdStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
+    // Create pipeline
     const pipeline = this.createPipeline();
 
+    // Create test stage
     this.createTestStage(pipeline);
+
+    // Create deploy stage
     this.createDeployStage(pipeline);
   }
 
@@ -40,10 +44,12 @@ export class WidgetCicdStack extends cdk.Stack {
   }
 
   private createTestStage(pipeline: cdk.pipelines.CodePipeline): void {
+    // Create cdk stage
     const testStage = new cdk.Stage(this, "Test", {
-      stageName: "TestStage",
+      stageName: "Test"
     });
 
+    // Create pipeline stage using cdk stage
     const pipelineTestStage = pipeline.addStage(testStage);
 
     // Create test role
@@ -71,12 +77,7 @@ export class WidgetCicdStack extends cdk.Stack {
 
   private createDeployStage(pipeline: cdk.pipelines.CodePipeline) {
     pipeline.addStage(
-      new ProductionDeployStage(this, "Deploy", {
-        env: {
-          account: process.env.CDK_DEFAULT_ACCOUNT,
-          region: process.env.CDK_DEFAULT_REGION,
-        },
-      })
+      new ProductionDeployStage(this, "Deploy")
     );
   }
 
