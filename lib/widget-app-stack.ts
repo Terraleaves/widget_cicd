@@ -41,11 +41,10 @@ export class WidgetCdkStack extends cdk.Stack {
       defaultVPC,
       securityGroup
     );
-    if (cdk.Fn.importValue("lbDNS").length === 0)
-      new cdk.CfnOutput(this, "LoadBalancerDNS", {
-        value: loadBalancer.loadBalancerDnsName,
-        exportName: "lbDNS",
-      });
+    new cdk.CfnOutput(this, "LoadBalancerDNS", {
+      value: loadBalancer.loadBalancerDnsName,
+      exportName: "lbDNS",
+    });
 
     // Add Listener to LB (for HTTP on Port 80)
     const listener = this.createApplicationListener(loadBalancer);

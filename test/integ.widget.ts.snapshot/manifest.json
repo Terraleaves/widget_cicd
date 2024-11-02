@@ -1,0 +1,205 @@
+{
+  "version": "38.0.1",
+  "artifacts": {
+    "IntegrationTestStack.assets": {
+      "type": "cdk:asset-manifest",
+      "properties": {
+        "file": "IntegrationTestStack.assets.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+      }
+    },
+    "IntegrationTestStack": {
+      "type": "aws:cloudformation:stack",
+      "environment": "aws://116981789059/ap-southeast-2",
+      "properties": {
+        "templateFile": "IntegrationTestStack.template.json",
+        "terminationProtection": false,
+        "validateOnSynth": false,
+        "notificationArns": [],
+        "assumeRoleArn": "arn:${AWS::Partition}:iam::116981789059:role/cdk-hnb659fds-deploy-role-116981789059-ap-southeast-2",
+        "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::116981789059:role/cdk-hnb659fds-cfn-exec-role-116981789059-ap-southeast-2",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-116981789059-ap-southeast-2/33233c4f607510eab954265f02282284c05fb7b0b54b506b621773cd0cd2a33c.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
+        "additionalDependencies": [
+          "IntegrationTestStack.assets"
+        ],
+        "lookupRole": {
+          "arn": "arn:${AWS::Partition}:iam::116981789059:role/cdk-hnb659fds-lookup-role-116981789059-ap-southeast-2",
+          "requiresBootstrapStackVersion": 8,
+          "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+        }
+      },
+      "dependencies": [
+        "IntegrationTestStack.assets"
+      ],
+      "metadata": {
+        "/IntegrationTestStack/widget-instance-role/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "widgetinstanceroleA918D3F2"
+          }
+        ],
+        "/IntegrationTestStack/widget-instance-sg/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "widgetinstancesg0F09E863"
+          }
+        ],
+        "/IntegrationTestStack/widget-instance-sg/from IntegrationTestStackwidgetinstancesgC0F88F8F:80": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "widgetinstancesgfromIntegrationTestStackwidgetinstancesgC0F88F8F80AA1403B7"
+          }
+        ],
+        "/IntegrationTestStack/widget-instance/Profile": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "widgetinstanceProfile6B57AC5F"
+          }
+        ],
+        "/IntegrationTestStack/widget-instance/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "widgetinstance52A2D3A4"
+          }
+        ],
+        "/IntegrationTestStack/AutoScalingGroup": [
+          {
+            "type": "aws:cdk:warning",
+            "data": "desiredCapacity has been configured. Be aware this will reset the size of your AutoScalingGroup on every deployment. See https://github.com/aws/aws-cdk/issues/5215 [ack: @aws-cdk/aws-autoscaling:desiredCapacitySet]"
+          }
+        ],
+        "/IntegrationTestStack/AutoScalingGroup/ASG": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "AutoScalingGroupASG804C35BE"
+          }
+        ],
+        "/IntegrationTestStack/LB/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "LB8A12904C"
+          }
+        ],
+        "/IntegrationTestStack/LB/Listener/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "LBListener49E825B4"
+          }
+        ],
+        "/IntegrationTestStack/LB/Listener/TargetGroup/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "LBListenerTargetGroupF04FCF6D"
+          }
+        ],
+        "/IntegrationTestStack/LoadBalancerDNS": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "LoadBalancerDNS"
+          }
+        ],
+        "/IntegrationTestStack/BootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BootstrapVersion"
+          }
+        ],
+        "/IntegrationTestStack/CheckBootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CheckBootstrapVersion"
+          }
+        ]
+      },
+      "displayName": "IntegrationTestStack"
+    },
+    "ResourcecreationDefaultTestDeployAssert42CC29F4.assets": {
+      "type": "cdk:asset-manifest",
+      "properties": {
+        "file": "ResourcecreationDefaultTestDeployAssert42CC29F4.assets.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+      }
+    },
+    "ResourcecreationDefaultTestDeployAssert42CC29F4": {
+      "type": "aws:cloudformation:stack",
+      "environment": "aws://unknown-account/unknown-region",
+      "properties": {
+        "templateFile": "ResourcecreationDefaultTestDeployAssert42CC29F4.template.json",
+        "terminationProtection": false,
+        "validateOnSynth": false,
+        "notificationArns": [],
+        "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-deploy-role-${AWS::AccountId}-${AWS::Region}",
+        "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-cfn-exec-role-${AWS::AccountId}-${AWS::Region}",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/f6ed96d9ee59b8723b279ea57db8f1d4f896e85a235d096fd19e43491e3d38fb.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
+        "additionalDependencies": [
+          "ResourcecreationDefaultTestDeployAssert42CC29F4.assets"
+        ],
+        "lookupRole": {
+          "arn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-lookup-role-${AWS::AccountId}-${AWS::Region}",
+          "requiresBootstrapStackVersion": 8,
+          "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+        }
+      },
+      "dependencies": [
+        "ResourcecreationDefaultTestDeployAssert42CC29F4.assets"
+      ],
+      "metadata": {
+        "/Resource creation/DefaultTest/DeployAssert/HttpApiCall5461ecb10996a278353ebe2cfb4aff11/Default/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "HttpApiCall5461ecb10996a278353ebe2cfb4aff11"
+          }
+        ],
+        "/Resource creation/DefaultTest/DeployAssert/HttpApiCall5461ecb10996a278353ebe2cfb4aff11/AssertionResults": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "AssertionResultsHttpApiCall5461ecb10996a278353ebe2cfb4aff11"
+          }
+        ],
+        "/Resource creation/DefaultTest/DeployAssert/SingletonFunction1488541a7b23466481b69b4408076b81/Role": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SingletonFunction1488541a7b23466481b69b4408076b81Role37ABCE73"
+          }
+        ],
+        "/Resource creation/DefaultTest/DeployAssert/SingletonFunction1488541a7b23466481b69b4408076b81/Handler": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SingletonFunction1488541a7b23466481b69b4408076b81HandlerCD40AE9F"
+          }
+        ],
+        "/Resource creation/DefaultTest/DeployAssert/LatestNodeRuntimeMap": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "LatestNodeRuntimeMap"
+          }
+        ],
+        "/Resource creation/DefaultTest/DeployAssert/BootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BootstrapVersion"
+          }
+        ],
+        "/Resource creation/DefaultTest/DeployAssert/CheckBootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CheckBootstrapVersion"
+          }
+        ]
+      },
+      "displayName": "Resource creation/DefaultTest/DeployAssert"
+    },
+    "Tree": {
+      "type": "cdk:tree",
+      "properties": {
+        "file": "tree.json"
+      }
+    }
+  }
+}
