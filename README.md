@@ -112,7 +112,7 @@ This project is licensed under the MIT License.
 
 
 ## System Architecture
-![alt text](infrastructure.png)
+![alt text](infrastructure_cicd.png)
 
 ## Prerequisites
 To manage and deploy this stac, you will need the following:
