@@ -112,7 +112,7 @@ This project is licensed under the MIT License.
 
 
 ## System Architecture
-![alt text]()
+![alt text](infrastructure.png)
 
 ## Prerequisites
 To manage and deploy this stac, you will need the following:
