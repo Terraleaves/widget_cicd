@@ -85,16 +85,6 @@ A CodeBuild step that runs npm test to verify unit tests.
 3. **Integration Test Step**
 A CodeBuild step that runs integration tests with npm run integ-test.
 
-## Outputs
-
-Once the stack is deployed, the ALB DNS name will be output, which can be used to access the deployed application.
-
-```
-Outputs:
-WidgetCdkStack.lbDNS = <load-balancer-dns-name>
-```
-
-Replace <load-balancer-dns-name> with the actual DNS name after deployment.
 
 ## Clean Up
 
