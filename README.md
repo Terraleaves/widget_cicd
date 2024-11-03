@@ -1,115 +1,112 @@
-# COMP2029 Widget CICD
-This CICD stack is for automating deployment, monitoring, and testing of a widget system using AWS CodePipeline.
-The pipeline integrates with GitHub for source control, builds the application, and deploys to a specified environment, with a manual approaval step before production deployment.
+const readmeContent = `
+# Widget CDK Stack
 
-## Overview
-The WidgetCicdStack uses AWS CodePipeline to manage the CI/CD workflow.
-- **Pipeline Creation**: CodePipeline is set up to trigger builds from a GitHub repository.
-- **Build and Synthesis Step**: The ShellStep in the pipeline installs dependencies, builds the application, and synthesizes the CDK stack.
-- **Deploy Stage**: Deploys the stack in the specified environment.
-- **Test Stages**: Unit and integration tests are configured to run automatically before deployment.
-- **IAM Roles**: Roles are defined to grant necessary permissions to the pipeline and test steps.
+This project sets up and deploys an AWS infrastructure using AWS CDK, including an Auto Scaling Group, an Application Load Balancer, and a CI/CD pipeline with test stages. The infrastructure is defined in WidgetCdkStack, while the CI/CD pipeline is managed by WidgetCicdStack.
 
-## Prerequisites
-Ensure you have the following set up:
+## Project Structure
 
-- AWS CDK installed (npm install -g aws-cdk)
-- AWS CLI configured with appropriate permissions
-- Node.js and npm installed
-- .env file configured with environment variables if required
+- **WidgetCdkStack**: Defines the infrastructure with an EC2 Auto Scaling Group, security group, and an Application Load Balancer (ALB).
+- **WidgetCicdStack**: Sets up a CodePipeline CI/CD pipeline for deploying the WidgetCdkStack, with pre-deployment steps for unit and integration testing.
 
-## File Structure
-- **WidgetCicdStack**: The main CDK stack that sets up the pipeline.
-- **production-deploy-stage.ts**: Defines the production deployment stage.
+## Requirements
 
-## Key Components
+- Node.js (>= 14.x)
+- AWS CLI
+- AWS CDK
+- AWS CodeStar connection for GitHub
 
-### 1. Pipeline Setup
-The pipeline is created using CodePipeline and is configured to use a GitHub repository as the source:
+### Environment Variables
 
-```typescript
-const pipeline = new CodePipeline(this, "Pipeline", {
-  pipelineName: "WidgetPipeline",
-  synth: new ShellStep("Synth", {
-    input: CodePipelineSource.connection(
-      "Terraleaves/widget_cicd",
-      "master",
-      {
-        connectionArn: "arn:aws:codeconnections:ap-southeast-2:116981789059:connection/40bc72e5-4f17-4152-99b1-1b1e86c06876",
-      }
-    ),
-    commands: ["npm ci", "npm run build", "npx cdk synth"],
-    primaryOutputDirectory: "cdk.out",
-  }),
-});
+Ensure that you have a .env file with the following content:
+
+```
+ACCOUNT_ID=<AWS_ACCOUNT_ID>
+REGION=<AWS_REGION>
 ```
 
-### 2. Test Stages
-The stack includes two test steps: **Unit Testing** and **Integration Testing**, each running in the CodeBuild environment.
+## Deployment Steps
 
-```typescript
-const unitTestStep = new cdk.pipelines.CodeBuildStep("UnitTest", {
-  role: testRole,
-  commands: ["npm ci", "npm test"],
-});
-
-const integrationTestStep = new cdk.pipelines.CodeBuildStep("IntegrationTest", {
-  role: testRole,
-  commands: ["npm ci", "npm run integ-test"],
-});
-```
-
-### 3. IAM Role for Testing
-A role with AdministratorAccess permissions is created for testing purposes.
-
-```typescript
-const testRole = new iam.Role(this, "PipelineTestRole", {
-  assumedBy: new iam.CompositePrincipal(
-    new iam.ServicePrincipal("codebuild.amazonaws.com"),
-    new iam.ServicePrincipal("cloudformation.amazonaws.com")
-  ),
-});
-testRole.addManagedPolicy(
-  iam.ManagedPolicy.fromAwsManagedPolicyName("AdministratorAccess")
-);
-```
-
-## Deployment
-To deploy the WidgetCicdStack, run the following command:
-
+1. **Install Dependencies**
 ```bash
-cdk deploy
+npm install
 ```
 
-## Testing
-
-### Unit Tests
-Unit tests are defined in the project and will be triggered in the UnitTest step. They can also be run locally with:
-
+2. **Bootstrap CDK**
+This step ensures the environment is set up for deploying the stack.
 ```bash
-npm test
+cdk bootstrap
 ```
 
-### Integration Tests
-Integration tests are configured to test the deployed resources in the IntegrationTest step. To run integration tests locally:
-
+3. **Deploy Stack**
+Deploy the Widget CDK Stack.
 ```bash
-npm run integ-test
+cdk deploy WidgetCdkStack
 ```
 
-## Environment Configuration
-The pipeline uses environment variables configured in a .env file for sensitive or configurable information. Ensure that the .env file is set up before deploying.
+4. **Deploy Pipeline**
+Deploy the Widget CICD Pipeline stack, which will handle the automated deployment and testing of the infrastructure.
+```bash
+cdk deploy WidgetCicdStack
+```
 
-## Additional Information
-- **CodePipeline**: Orchestrates the CI/CD workflow.
-- **CodeBuild**: Runs the build and test commands.
-- **IAM**: Manages permissions required by the pipeline and its stages.
+## Code Explanation
 
-For more details, consult the AWS CDK documentation: [AWS CDK](https://docs.aws.amazon.com/cdk/v2/guide/home.html).
+### WidgetCdkStack
+
+1. **VPC Setup**
+Retrieves the default VPC and configures the environment for the stack.
+
+2. **IAM Role**
+Creates an IAM role for EC2 instances in the Auto Scaling Group with ec2.amazonaws.com as the assumed service principal.
+
+3. **Security Group**
+Defines a security group with rules allowing HTTP and HTTPS traffic from any IP address.
+
+4. **Launch Template**
+Defines an EC2 launch template using a specific AMI for instance provisioning.
+
+5. **Auto Scaling Group**
+Creates an Auto Scaling Group with min capacity of 1 and max capacity of 3 instances.
+
+6. **Application Load Balancer**
+Sets up an ALB and configures an HTTP listener on port 80.
+
+7. **Target Group**
+Adds an Auto Scaling Group as a target with health checks.
+
+### WidgetCicdStack
+
+1. **CodePipeline**
+Sets up a pipeline for continuous integration and deployment. Uses GitHub as the source and synthesizes the stack using AWS CodeBuild.
+
+2. **Unit Test Step**
+A CodeBuild step that runs npm test to verify unit tests.
+
+3. **Integration Test Step**
+A CodeBuild step that runs integration tests with npm run integ-test.
+
+## Outputs
+
+Once the stack is deployed, the ALB DNS name will be output, which can be used to access the deployed application.
+
+```
+Outputs:
+WidgetCdkStack.lbDNS = <load-balancer-dns-name>
+```
+
+Replace <load-balancer-dns-name> with the actual DNS name after deployment.
+
+## Clean Up
+
+To delete the deployed stacks and resources, run:
+```bash
+cdk destroy WidgetCdkStack
+cdk destroy WidgetCicdStack
+```
 
 ## License
-This project is licensed under the MIT License.
 
+This project is licensed under the MIT License.
 
 ## System Architecture
 ![alt text](infrastructure_cicd.png)
