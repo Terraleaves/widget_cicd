@@ -1,4 +1,3 @@
-const readmeContent = `
 # Widget CDK Stack
 
 This project sets up and deploys an AWS infrastructure using AWS CDK, including an Auto Scaling Group, an Application Load Balancer, and a CI/CD pipeline with test stages. The infrastructure is defined in WidgetCdkStack, while the CI/CD pipeline is managed by WidgetCicdStack.
