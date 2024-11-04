@@ -31,5 +31,5 @@
       }
     ]
   },
-  "ami:account=116981789059:filters.image-type.0=machine:filters.name.0=widget-instance-ami:filters.state.0=available:region=ap-southeast-2": "ami-08eb7eb144d8f1780"
+  "ami:account=116981789059:filters.image-type.0=machine:filters.name.0=widget-instance-ami:filters.state.0=available:region=ap-southeast-2": "ami-04ddfd14dc786e7f5"
 }

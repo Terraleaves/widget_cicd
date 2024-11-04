@@ -1,0 +1,22 @@
+{
+  "version": "38.0.1",
+  "testCases": {
+    "Resource creation/DefaultTest": {
+      "stacks": [
+        "IntegrationTestStack"
+      ],
+      "regions": [
+        "ap-southeast-2"
+      ],
+      "cdkCommandOptions": {
+        "destroy": {
+          "args": {
+            "force": true
+          }
+        }
+      },
+      "assertionStack": "Resource creation/DefaultTest/DeployAssert",
+      "assertionStackName": "ResourcecreationDefaultTestDeployAssert42CC29F4"
+    }
+  }
+}
